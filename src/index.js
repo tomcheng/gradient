@@ -5,33 +5,39 @@ import Board from "./board";
 import debounce from "lodash/debounce";
 
 const rootEl = document.getElementById("root");
-
-const scene = new Scene();
-
 const renderer = new Renderer({
   canvas: rootEl,
   width: window.innerWidth,
   height: window.innerHeight
 });
-
-scene.add(new Board({
+const scene = new Scene();
+const board = new Board({
   width: window.innerWidth,
   height: window.innerHeight
-}));
-
-renderer.render(scene);
+});
 
 window.addEventListener(
   "resize",
   debounce(() => {
-    renderer.updateSize({
+    const newSize = {
       width: window.innerWidth,
       height: window.innerHeight
-    });
+    };
+    board.setSize(newSize);
+    renderer.setSize(newSize);
     renderer.render(scene);
   }, 300)
 );
 
-console.log("hello");
+scene.add(board);
+
+const animate = () => {
+  requestAnimationFrame(animate);
+
+  board.update();
+  renderer.render(scene);
+};
+
+animate();
 
 registerServiceWorker();
