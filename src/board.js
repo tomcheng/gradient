@@ -21,8 +21,8 @@ class Board {
     const bottomLeft = new Color("#9d39ec");
     const bottomRight = new Color("#ffcc63");
 
-    const horizontalTiles = 15;
-    const verticalTiles = 10;
+    const horizontalTiles = 10;
+    const verticalTiles = 6;
     const tileWidth = Math.ceil(width / horizontalTiles);
     const tileHeight = Math.ceil(height / verticalTiles);
 
