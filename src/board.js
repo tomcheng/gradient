@@ -1,5 +1,17 @@
 import Tile from "./tile";
 import Color, { interpolate } from "./color";
+import random from "lodash/random";
+import sortBy from "lodash/sortBy";
+
+const getRandomArray = length => {
+  const arr = [];
+
+  for (let i = 0; i < length; i++) {
+    arr.push({ index: i, rand: random() });
+  }
+
+  return sortBy(arr, "rand").map(a => a.index);
+};
 
 class Board {
   constructor({ width, height }) {
@@ -14,12 +26,19 @@ class Board {
     const tileWidth = Math.ceil(width / horizontalTiles);
     const tileHeight = Math.ceil(height / verticalTiles);
 
+    const randoms = getRandomArray(horizontalTiles * verticalTiles);
+
     for (let i = 0; i < horizontalTiles; i++) {
       for (let j = 0; j < verticalTiles; j++) {
+        const index = j * horizontalTiles + i;
+        const randomIndex = randoms[index];
+
         this.tiles.push(
           new Tile({
-            i,
-            j,
+            iFinal: i,
+            jFinal: j,
+            i: randomIndex % horizontalTiles,
+            j: Math.floor(randomIndex / horizontalTiles),
             width: tileWidth,
             height: tileHeight,
             color: interpolate({
