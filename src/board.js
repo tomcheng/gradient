@@ -1,4 +1,4 @@
-import Rectangle from "./rectangle";
+import Tile from "./tile";
 import Color, { interpolate } from "./color";
 
 class Board {
@@ -17,12 +17,12 @@ class Board {
     for (let i = 0; i < horizontalTiles; i++) {
       for (let j = 0; j < verticalTiles; j++) {
         this.tiles.push(
-          new Rectangle({
-            x: i * tileWidth,
-            y: j * tileHeight,
+          new Tile({
+            i,
+            j,
             width: tileWidth,
             height: tileHeight,
-            fill: interpolate({
+            color: interpolate({
               topLeft,
               topRight,
               bottomLeft,
