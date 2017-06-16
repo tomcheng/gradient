@@ -9,6 +9,7 @@ class Tile {
     this.j = j;
     this.width = width;
     this.height = height;
+    this.offset = null;
 
     this.rectangle = new Rectangle({
       x: i * width + 0.5 * PADDING,
@@ -24,11 +25,28 @@ class Tile {
     this.height = height;
   };
 
+  setOffset = ({ x, y }) => {
+    this.offset = { x, y };
+  };
+
+  clearOffset = () => {
+    this.offset = null;
+  };
+
   update = () => {
-    this.rectangle.x = this.rectangle.x + DECAY * (this.i * this.width + 0.5 * PADDING - this.rectangle.x);
-    this.rectangle.y = this.rectangle.y + DECAY * (this.j * this.height + 0.5 * PADDING - this.rectangle.y);
-    this.rectangle.width = this.rectangle.width + DECAY * (this.width - PADDING - this.rectangle.width);
-    this.rectangle.height = this.rectangle.height + DECAY * (this.height - PADDING - this.rectangle.height);
+    if (this.offset) {
+      this.rectangle.x = this.i * this.width + 0.5 * PADDING + this.offset.x;
+      this.rectangle.y = this.j * this.height + 0.5 * PADDING + this.offset.y;
+    } else {
+      this.rectangle.x = this.rectangle.x + DECAY * (this.i * this.width + 0.5 * PADDING - this.rectangle.x);
+      this.rectangle.y = this.rectangle.y + DECAY * (this.j * this.height + 0.5 * PADDING - this.rectangle.y);
+      this.rectangle.width =
+        this.rectangle.width +
+        DECAY * (this.width - PADDING - this.rectangle.width);
+      this.rectangle.height =
+        this.rectangle.height +
+        DECAY * (this.height - PADDING - this.rectangle.height);
+    }
   };
 
   render = context => {
