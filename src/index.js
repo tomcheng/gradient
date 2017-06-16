@@ -1,7 +1,7 @@
 import registerServiceWorker from "./registerServiceWorker";
 import Scene from "./scene";
 import Renderer from "./renderer";
-import Rectangle from "./rectangle";
+import Board from "./board";
 import debounce from "lodash/debounce";
 
 const rootEl = document.getElementById("root");
@@ -14,12 +14,10 @@ const renderer = new Renderer({
   height: window.innerHeight
 });
 
-scene.add(
-  new Rectangle({ x: 10, y: 10, width: 100, height: 100, fill: "blue" })
-);
-scene.add(
-  new Rectangle({ x: 210, y: 10, width: 100, height: 100, fill: "green" })
-);
+scene.add(new Board({
+  width: window.innerWidth,
+  height: window.innerHeight
+}));
 
 renderer.render(scene);
 
