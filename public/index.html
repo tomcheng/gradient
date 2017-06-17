@@ -2,28 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300">
+    <link rel="stylesheet" type="text/css" href="./reset.css">
+    <link rel="stylesheet" type="text/css" href="./styles.css">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#000000">
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     <title>Gradient</title>
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        border: 0;
-        height: 100%;
-        width: 100%;
-      }
-
-      #root, #touch {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-      }
-    </style>
   </head>
   <body>
     <noscript>
@@ -31,5 +18,13 @@
     </noscript>
     <canvas id="root"></canvas>
     <div id="touch"></div>
+    <div id="win">
+      <div class="screen-content">
+        <h1>Nice Work!</h1>
+        <div class="button" id="play-again">
+          Play Again
+        </div>
+      </div>
+    </div>
   </body>
 </html>

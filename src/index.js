@@ -6,6 +6,12 @@ import debounce from "lodash/debounce";
 
 const rootEl = document.getElementById("root");
 const touchEl = document.getElementById("touch");
+const winEl = document.getElementById("win");
+const playAgainEl = document.getElementById("play-again");
+
+const handleWin = () => {
+  winEl.style.display = "block";
+};
 
 const renderer = new Renderer({
   canvas: rootEl,
@@ -13,14 +19,29 @@ const renderer = new Renderer({
   height: window.innerHeight
 });
 const scene = new Scene();
-const board = new Board({
+let board = new Board({
   width: window.innerWidth,
-  height: window.innerHeight
+  height: window.innerHeight,
+  onWin: handleWin
 });
 
 scene.add(board);
 
 let isPressed = false;
+
+playAgainEl.addEventListener("click", () => {
+  scene.remove(board);
+
+  board = new Board({
+    width: window.innerWidth,
+    height: window.innerHeight,
+    onWin: handleWin
+  });
+
+  scene.add(board);
+
+  winEl.style.display = "none";
+});
 
 touchEl.addEventListener("mousedown", evt => {
   board.handlePress({ x: evt.clientX, y: evt.clientY });

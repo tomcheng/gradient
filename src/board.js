@@ -17,7 +17,7 @@ const getRandomArray = length => {
 const getRandomColors = num => shuffle(niceColors).slice(0, num).map(hex => new Color(hex));
 
 class Board {
-  constructor({ width, height }) {
+  constructor({ width, height, onWin }) {
     this.tiles = [];
     this.pressedTile = null;
     this.pressedTileOffset = null;
@@ -25,6 +25,8 @@ class Board {
     this.verticalTiles = 6;
     this.tileWidth = Math.ceil(width / this.horizontalTiles);
     this.tileHeight = Math.ceil(height / this.verticalTiles);
+    this.onWin = onWin;
+
     const [topLeft, topRight, bottomLeft, bottomRight] = getRandomColors(4);
 
     const randoms = getRandomArray(this.horizontalTiles * this.verticalTiles);
@@ -104,6 +106,7 @@ class Board {
       if (this.checkWin()) {
         window.setTimeout(() => {
           this.tiles.forEach(tile => tile.setWin());
+          this.onWin();
         }, 500);
       }
     }
