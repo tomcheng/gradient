@@ -21,11 +21,11 @@ class Board {
     this.pressedTile = null;
     this.initialPressPosition = null;
     this.horizontalTiles = horizontalTiles || 10;
-    this.verticalTiles = verticalTiles || 6;
+    this.verticalTiles = verticalTiles || 10;
     this.tileWidth = Math.ceil(width / this.horizontalTiles);
     this.tileHeight = Math.ceil(height / this.verticalTiles);
-    const topLeft = new Color("#6ac3a2");
-    const topRight = new Color("#3a7781");
+    const topLeft = new Color("#13c3ac");
+    const topRight = new Color("#104898");
     const bottomLeft = new Color("#9d39ec");
     const bottomRight = new Color("#ffcc63");
 
@@ -69,20 +69,24 @@ class Board {
 
   handlePress = ({ x, y }) => {
     this.pressedTile = this._findTile({ x, y });
-    this.initialPressPosition = { x, y };
+
+    const { x: tileX, y: tileY } = this.pressedTile.getPosition();
+
+    this.pressedTileOffset = { x: x - tileX, y: y - tileY };
   };
 
   handleMove = ({ x, y }) => {
-    const { x: xInit, y: yInit } = this.initialPressPosition;
-    this.pressedTile.setOffset({ x: x - xInit, y: y - yInit });
+    const { x: xOffset, y: yOffset } = this.pressedTileOffset;
+
+    this.pressedTile.setPosition({ x: x - xOffset, y: y - yOffset });
   };
 
   handleRelease = () => {
     if (this.pressedTile) {
-      this.pressedTile.clearOffset();
+      this.pressedTile.clearPosition();
       this.pressedTile = null;
     }
-    this.initialPressPosition = null;
+    this.pressedTileOffset = null;
   };
 
   setSize = ({ width, height }) => {

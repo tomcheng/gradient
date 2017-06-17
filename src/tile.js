@@ -9,7 +9,7 @@ class Tile {
     this.j = j;
     this.width = width;
     this.height = height;
-    this.offset = null;
+    this.position = null;
 
     this.rectangle = new Rectangle({
       x: i * width + 0.5 * PADDING,
@@ -25,18 +25,23 @@ class Tile {
     this.height = height;
   };
 
-  setOffset = ({ x, y }) => {
-    this.offset = { x, y };
+  getPosition = () => ({
+    x: this.rectangle.x,
+    y: this.rectangle.y
+  });
+
+  setPosition = ({ x, y }) => {
+    this.position = { x, y };
   };
 
-  clearOffset = () => {
-    this.offset = null;
+  clearPosition = () => {
+    this.position = null;
   };
 
   update = () => {
-    if (this.offset) {
-      this.rectangle.x = this.i * this.width + 0.5 * PADDING + this.offset.x;
-      this.rectangle.y = this.j * this.height + 0.5 * PADDING + this.offset.y;
+    if (this.position) {
+      this.rectangle.x = this.position.x;
+      this.rectangle.y = this.position.y;
     } else {
       this.rectangle.x = this.rectangle.x + DECAY * (this.i * this.width + 0.5 * PADDING - this.rectangle.x);
       this.rectangle.y = this.rectangle.y + DECAY * (this.j * this.height + 0.5 * PADDING - this.rectangle.y);
