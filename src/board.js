@@ -22,8 +22,8 @@ class Board {
     this.pressedTile = null;
     this.lastPressedTile = null;
     this.pressedTileOffset = null;
-    this.horizontalTiles = 4;
-    this.verticalTiles = 6;
+    this.horizontalTiles = 2;
+    this.verticalTiles = 3;
     this.tileWidth = Math.ceil(width / this.horizontalTiles);
     this.tileHeight = Math.ceil(height / this.verticalTiles);
     this.onWin = onWin;

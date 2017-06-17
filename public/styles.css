@@ -14,6 +14,21 @@ body, html {
 #win {
   color: #fff;
   display: none;
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out 0.5s;
+}
+
+#win.active {
+  opacity: 1;
+}
+
+#win .button {
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out 0.9s;
+}
+
+#win.active .button {
+  opacity: 0.9;
 }
 
 .screen-content {
@@ -31,14 +46,7 @@ body, html {
 h1 {
   font-size: 32px;
   line-height: 40px;
-  margin-bottom: 10px;
-  text-align: center;
-}
-
-h2 {
-  font-size: 21px;
-  line-height: 28px;
-  margin-bottom: 14px;
+  margin-bottom: 15px;
   text-align: center;
 }
 
@@ -53,8 +61,4 @@ h2 {
   color: #345069;
   border-radius: 3px;
   user-select: none;
-}
-
-* + .button {
-  margin-top: 20px;
 }

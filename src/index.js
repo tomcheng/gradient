@@ -10,7 +10,11 @@ const winEl = document.getElementById("win");
 const playAgainEl = document.getElementById("play-again");
 
 const handleWin = () => {
+  winEl.className = "";
   winEl.style.display = "block";
+  requestAnimationFrame(() => {
+    winEl.className = "active";
+  });
 };
 
 const renderer = new Renderer({
