@@ -3,6 +3,7 @@ import Color, { interpolate } from "./color";
 import { niceColors } from "./colors";
 import find from "lodash/find";
 import shuffle from "lodash/shuffle";
+import random from "lodash/random";
 
 const getRandomArray = length => {
   const arr = [];
@@ -22,8 +23,13 @@ class Board {
     this.pressedTile = null;
     this.lastPressedTile = null;
     this.pressedTileOffset = null;
-    this.horizontalTiles = 2;
-    this.verticalTiles = 3;
+    if (height > width) {
+      this.horizontalTiles = random(4, 8);
+      this.verticalTiles = random(6, 12);
+    } else {
+      this.horizontalTiles = random(6, 12);
+      this.verticalTiles = random(4, 8);
+    }
     this.tileWidth = Math.ceil(width / this.horizontalTiles);
     this.tileHeight = Math.ceil(height / this.verticalTiles);
     this.onWin = onWin;
