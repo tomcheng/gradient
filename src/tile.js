@@ -12,7 +12,7 @@ class Tile {
     this.width = width;
     this.height = height;
     this.position = null;
-    this.correct = false;
+    this.correct = iFinal === i && jFinal === j;
 
     this.rectangle = new Rectangle({
       x: i * width,
