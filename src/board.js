@@ -1,17 +1,16 @@
 import Tile from "./tile";
 import Color, { interpolate } from "./color";
-import random from "lodash/random";
-import sortBy from "lodash/sortBy";
 import find from "lodash/find";
+import shuffle from "lodash/shuffle";
 
 const getRandomArray = length => {
   const arr = [];
 
   for (let i = 0; i < length; i++) {
-    arr.push({ index: i, rand: random() });
+    arr.push(i);
   }
 
-  return sortBy(arr, "rand").map(a => a.index);
+  return shuffle(arr);
 };
 
 const randomColor = () => {
