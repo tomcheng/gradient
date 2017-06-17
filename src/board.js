@@ -17,12 +17,12 @@ const getRandomArray = length => {
 const getRandomColors = num => shuffle(niceColors).slice(0, num).map(hex => new Color(hex));
 
 class Board {
-  constructor({ width, height, horizontalTiles, verticalTiles }) {
+  constructor({ width, height }) {
     this.tiles = [];
     this.pressedTile = null;
     this.pressedTileOffset = null;
-    this.horizontalTiles = horizontalTiles || 8;
-    this.verticalTiles = verticalTiles || 12;
+    this.horizontalTiles = 4;
+    this.verticalTiles = 6;
     this.tileWidth = Math.ceil(width / this.horizontalTiles);
     this.tileHeight = Math.ceil(height / this.verticalTiles);
     const [topLeft, topRight, bottomLeft, bottomRight] = getRandomColors(4);
@@ -68,7 +68,7 @@ class Board {
   handlePress = ({ x, y }) => {
     const tile = this._findTile({ x, y });
 
-    if (tile.isCorrect()) {
+    if (tile.correct) {
       return;
     }
 
@@ -100,9 +100,18 @@ class Board {
       this.pressedTile.clearPosition();
       this.pressedTile = null;
       this.tiles.forEach(tile => tile.checkIsCorrect());
+
+      if (this.checkWin()) {
+        window.setTimeout(() => {
+          this.tiles.forEach(tile => tile.setWin());
+        }, 500);
+      }
     }
+
     this.pressedTileOffset = null;
   };
+
+  checkWin = () => this.tiles.every(tile => tile.correct);
 
   setSize = ({ width, height }) => {
     this.tileWidth = Math.ceil(width / this.horizontalTiles);

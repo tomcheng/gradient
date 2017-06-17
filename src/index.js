@@ -20,25 +20,10 @@ const board = new Board({
 
 scene.add(board);
 
-const animate = () => {
-  requestAnimationFrame(animate);
-
-  board.update();
-  renderer.render(scene);
-};
-
-animate();
-
 let isPressed = false;
 
 touchEl.addEventListener("mousedown", evt => {
   board.handlePress({ x: evt.clientX, y: evt.clientY });
-  isPressed = true;
-});
-
-touchEl.addEventListener("touchstart", evt => {
-  evt.preventDefault();
-  board.handlePress({ x: evt.touches[0].clientX, y: evt.touches[0].clientY });
   isPressed = true;
 });
 
@@ -48,16 +33,22 @@ touchEl.addEventListener("mousemove", evt => {
   }
 });
 
+touchEl.addEventListener("mouseup", () => {
+  board.handleRelease();
+  isPressed = false;
+});
+
+touchEl.addEventListener("touchstart", evt => {
+  evt.preventDefault();
+  board.handlePress({ x: evt.touches[0].clientX, y: evt.touches[0].clientY });
+  isPressed = true;
+});
+
 touchEl.addEventListener("touchmove", evt => {
   evt.preventDefault();
   if (isPressed) {
     board.handleMove({ x: evt.touches[0].clientX, y: evt.touches[0].clientY });
   }
-});
-
-touchEl.addEventListener("mouseup", () => {
-  board.handleRelease();
-  isPressed = false;
 });
 
 touchEl.addEventListener("touchend", evt => {
@@ -78,5 +69,14 @@ window.addEventListener(
     renderer.render(scene);
   }, 300)
 );
+
+const animate = () => {
+  requestAnimationFrame(animate);
+
+  board.update();
+  renderer.render(scene);
+};
+
+animate();
 
 registerServiceWorker();
