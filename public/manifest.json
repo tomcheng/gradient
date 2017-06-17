@@ -1,9 +1,9 @@
 {
-  "short_name": "Gradien",
-  "name": "Gradien",
+  "short_name": "Zen Hues",
+  "name": "Zen Hues",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "zen-hues-icon_192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     }
