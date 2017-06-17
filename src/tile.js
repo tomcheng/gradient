@@ -38,6 +38,14 @@ class Tile {
     this.position = null;
   };
 
+  swap = otherTile => {
+    const { i: iOther, j: jOther } = otherTile;
+    otherTile.i = this.i;
+    otherTile.j = this.j;
+    this.i = iOther;
+    this.j = jOther;
+  };
+
   update = () => {
     if (this.position) {
       this.rectangle.x = this.position.x;

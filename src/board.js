@@ -79,6 +79,12 @@ class Board {
     const { x: xOffset, y: yOffset } = this.pressedTileOffset;
 
     this.pressedTile.setPosition({ x: x - xOffset, y: y - yOffset });
+
+    const overTile = this._findTile({ x, y });
+
+    if (overTile !== this.pressedTile) {
+      this.pressedTile.swap(overTile);
+    }
   };
 
   handleRelease = () => {
