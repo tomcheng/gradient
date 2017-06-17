@@ -36,13 +36,32 @@ touchEl.addEventListener("mousedown", evt => {
   isPressed = true;
 });
 
+touchEl.addEventListener("touchstart", evt => {
+  evt.preventDefault();
+  board.handlePress({ x: evt.touches[0].clientX, y: evt.touches[0].clientY });
+  isPressed = true;
+});
+
 touchEl.addEventListener("mousemove", evt => {
   if (isPressed) {
     board.handleMove({ x: evt.clientX, y: evt.clientY });
   }
 });
 
+touchEl.addEventListener("touchmove", evt => {
+  evt.preventDefault();
+  if (isPressed) {
+    board.handleMove({ x: evt.touches[0].clientX, y: evt.touches[0].clientY });
+  }
+});
+
 touchEl.addEventListener("mouseup", () => {
+  board.handleRelease();
+  isPressed = false;
+});
+
+touchEl.addEventListener("touchend", evt => {
+  evt.preventDefault();
   board.handleRelease();
   isPressed = false;
 });

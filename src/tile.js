@@ -1,7 +1,6 @@
 import Rectangle from "./rectangle";
+import Circle from "./circle";
 
-const PADDING = 16;
-const RADIUS = 10;
 const DECAY = 0.3;
 
 class Tile {
@@ -13,14 +12,21 @@ class Tile {
     this.width = width;
     this.height = height;
     this.position = null;
+    this.correct = false;
 
     this.rectangle = new Rectangle({
-      x: i * width + 0.5 * PADDING,
-      y: j * height + 0.5 * PADDING,
-      width: width - PADDING,
-      height: height - PADDING,
-      radius: RADIUS,
+      x: i * width,
+      y: j * height,
+      width: width,
+      height: height,
       fill: color
+    });
+
+    this.dot = new Circle({
+      x: i * width + 0.5 * width,
+      y: j * height + 0.5 * height,
+      radius: 3,
+      fill: "rgba(255,255,255,0.25)"
     });
   }
 
@@ -53,33 +59,40 @@ class Tile {
     }
   };
 
-  isCorrect = () => this.i === this.iFinal && this.j === this.jFinal;
+  checkIsCorrect = () => {
+    this.correct = this.i === this.iFinal && this.j === this.jFinal;
+  };
+
+  isCorrect = () => this.correct;
 
   update = () => {
-    const isCorrect = this.isCorrect();
-    const padding = isCorrect ? 0 : PADDING;
-    const radius = isCorrect ? 0 : RADIUS;
-
     if (this.position) {
       this.rectangle.x = this.position.x;
       this.rectangle.y = this.position.y;
+
+      this.dot.x = this.position.x + 0.5 * this.width;
+      this.dot.y = this.position.y + 0.5 * this.height;
     } else {
-      this.rectangle.x = this.rectangle.x + DECAY * (this.i * this.width + 0.5 * padding - this.rectangle.x);
-      this.rectangle.y = this.rectangle.y + DECAY * (this.j * this.height + 0.5 * padding - this.rectangle.y);
+      this.rectangle.x = this.rectangle.x + DECAY * (this.i * this.width - this.rectangle.x);
+      this.rectangle.y = this.rectangle.y + DECAY * (this.j * this.height - this.rectangle.y);
+
       this.rectangle.width =
         this.rectangle.width +
-        DECAY * (this.width - padding - this.rectangle.width);
+        DECAY * (this.width - this.rectangle.width);
       this.rectangle.height =
         this.rectangle.height +
-        DECAY * (this.height - padding - this.rectangle.height);
-      this.rectangle.radius =
-        this.rectangle.radius +
-        DECAY * (radius - this.rectangle.radius);
+        DECAY * (this.height - this.rectangle.height);
+
+      this.dot.x = this.dot.x + DECAY * ((this.i + 0.5) * this.width - this.dot.x);
+      this.dot.y = this.dot.y + DECAY * ((this.j + 0.5) * this.height - this.dot.y);
     }
   };
 
   render = context => {
     this.rectangle.render(context);
+    if (this.correct) {
+      this.dot.render(context);
+    }
   };
 }
 

@@ -14,20 +14,25 @@ const getRandomArray = length => {
   return sortBy(arr, "rand").map(a => a.index);
 };
 
+const randomColor = () => {
+  const num = Math.floor(Math.random() * 16777215).toString(16);
+  const hex = "#" + ("000000" + num).slice(-6);
+  return new Color(hex);
+};
+
 class Board {
   constructor({ width, height, horizontalTiles, verticalTiles }) {
-
     this.tiles = [];
     this.pressedTile = null;
-    this.initialPressPosition = null;
-    this.horizontalTiles = horizontalTiles || 10;
-    this.verticalTiles = verticalTiles || 10;
+    this.pressedTileOffset = null;
+    this.horizontalTiles = horizontalTiles || 8;
+    this.verticalTiles = verticalTiles || 12;
     this.tileWidth = Math.ceil(width / this.horizontalTiles);
     this.tileHeight = Math.ceil(height / this.verticalTiles);
-    const topLeft = new Color("#13c3ac");
-    const topRight = new Color("#104898");
-    const bottomLeft = new Color("#9d39ec");
-    const bottomRight = new Color("#ffcc63");
+    const topLeft = randomColor();
+    const topRight = randomColor();
+    const bottomLeft = randomColor();
+    const bottomRight = randomColor();
 
     const randoms = getRandomArray(this.horizontalTiles * this.verticalTiles);
 
@@ -68,7 +73,13 @@ class Board {
   };
 
   handlePress = ({ x, y }) => {
-    this.pressedTile = this._findTile({ x, y });
+    const tile = this._findTile({ x, y });
+
+    if (tile.isCorrect()) {
+      return;
+    }
+
+    this.pressedTile = tile;
 
     const { x: tileX, y: tileY } = this.pressedTile.getPosition();
 
@@ -76,13 +87,17 @@ class Board {
   };
 
   handleMove = ({ x, y }) => {
+    if (!this.pressedTile) {
+      return;
+    }
+
     const { x: xOffset, y: yOffset } = this.pressedTileOffset;
 
     this.pressedTile.setPosition({ x: x - xOffset, y: y - yOffset });
 
     const overTile = this._findTile({ x, y });
 
-    if (overTile !== this.pressedTile) {
+    if (overTile && overTile !== this.pressedTile) {
       this.pressedTile.swap(overTile);
     }
   };
@@ -91,6 +106,7 @@ class Board {
     if (this.pressedTile) {
       this.pressedTile.clearPosition();
       this.pressedTile = null;
+      this.tiles.forEach(tile => tile.checkIsCorrect());
     }
     this.pressedTileOffset = null;
   };
