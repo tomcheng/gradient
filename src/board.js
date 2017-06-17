@@ -20,6 +20,7 @@ class Board {
   constructor({ width, height, onWin }) {
     this.tiles = [];
     this.pressedTile = null;
+    this.lastPressedTile = null;
     this.pressedTileOffset = null;
     this.horizontalTiles = 4;
     this.verticalTiles = 6;
@@ -75,6 +76,7 @@ class Board {
     }
 
     this.pressedTile = tile;
+    this.lastPressedTile = tile;
 
     const { x: tileX, y: tileY } = this.pressedTile.getPosition();
 
@@ -132,12 +134,27 @@ class Board {
   };
 
   render = context => {
+    const correctTiles = [];
+    const incorrectTiles = [];
+
     this.tiles.forEach(tile => {
+      if (tile.correct) {
+        correctTiles.push(tile);
+      } else {
+        incorrectTiles.push(tile);
+      }
+    });
+
+    correctTiles.forEach(tile => {
       tile.render(context);
     });
 
-    if (this.pressedTile) {
-      this.pressedTile.render(context);
+    incorrectTiles.forEach(tile => {
+      tile.render(context);
+    });
+
+    if (this.lastPressedTile) {
+      this.lastPressedTile.render(context);
     }
   };
 }
