@@ -78,8 +78,10 @@ class Board {
   };
 
   handleRelease = () => {
-    this.pressedTile.clearOffset();
-    this.pressedTile = null;
+    if (this.pressedTile) {
+      this.pressedTile.clearOffset();
+      this.pressedTile = null;
+    }
     this.initialPressPosition = null;
   };
 
@@ -102,6 +104,10 @@ class Board {
     this.tiles.forEach(tile => {
       tile.render(context);
     });
+
+    if (this.pressedTile) {
+      this.pressedTile.render(context);
+    }
   };
 }
 
