@@ -1,5 +1,6 @@
 import Tile from "./tile";
 import Color, { interpolate } from "./color";
+import { niceColors } from "./colors";
 import find from "lodash/find";
 import shuffle from "lodash/shuffle";
 
@@ -13,11 +14,7 @@ const getRandomArray = length => {
   return shuffle(arr);
 };
 
-const randomColor = () => {
-  const num = Math.floor(Math.random() * 16777215).toString(16);
-  const hex = "#" + ("000000" + num).slice(-6);
-  return new Color(hex);
-};
+const getRandomColors = num => shuffle(niceColors).slice(0, num).map(hex => new Color(hex));
 
 class Board {
   constructor({ width, height, horizontalTiles, verticalTiles }) {
@@ -28,10 +25,7 @@ class Board {
     this.verticalTiles = verticalTiles || 12;
     this.tileWidth = Math.ceil(width / this.horizontalTiles);
     this.tileHeight = Math.ceil(height / this.verticalTiles);
-    const topLeft = randomColor();
-    const topRight = randomColor();
-    const bottomLeft = randomColor();
-    const bottomRight = randomColor();
+    const [topLeft, topRight, bottomLeft, bottomRight] = getRandomColors(4);
 
     const randoms = getRandomArray(this.horizontalTiles * this.verticalTiles);
 
