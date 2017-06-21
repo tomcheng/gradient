@@ -1,5 +1,5 @@
-import Rectangle from "./rectangle";
-import Circle from "./circle";
+import Rectangle from "../utils/rectangle";
+import Circle from "../utils/circle";
 
 const DECAY = 0.3;
 const OPACITY_DECAY = 0.1;

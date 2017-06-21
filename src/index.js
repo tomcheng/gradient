@@ -1,6 +1,6 @@
 import registerServiceWorker from "./registerServiceWorker";
-import Scene from "./scene";
-import Renderer from "./renderer";
+import Scene from "../utils/scene";
+import Renderer from "../utils/renderer";
 import Board from "./board";
 import debounce from "lodash/debounce";
 
@@ -18,7 +18,7 @@ const handleWin = () => {
 };
 
 const renderer = new Renderer({
-  canvas: rootEl,
+  domNode: rootEl,
   width: window.innerWidth,
   height: window.innerHeight
 });

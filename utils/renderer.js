@@ -1,6 +1,6 @@
 class Renderer {
-  constructor ({ canvas, width, height }) {
-    this.canvas = canvas;
+  constructor ({ domNode, width, height }) {
+    this.canvas = domNode;
     this.context = this.canvas.getContext("2d");
     this.canvas.width = width;
     this.canvas.height = height;
