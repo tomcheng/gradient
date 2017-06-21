@@ -1,5 +1,5 @@
 import registerServiceWorker from "./registerServiceWorker";
-import { Scene, Renderer } from "@thomascheng/canvas-utils";
+import { Canvas } from "@thomascheng/canvas-utils";
 import Board from "./board";
 import debounce from "lodash/debounce";
 
@@ -16,24 +16,23 @@ const handleWin = () => {
   });
 };
 
-const renderer = new Renderer({
+const canvas = new Canvas({
   domNode: rootEl,
   width: window.innerWidth,
   height: window.innerHeight
 });
-const scene = new Scene();
 let board = new Board({
   width: window.innerWidth,
   height: window.innerHeight,
   onWin: handleWin
 });
 
-scene.add(board);
+canvas.add(board);
 
 let isPressed = false;
 
 playAgainEl.addEventListener("click", () => {
-  scene.remove(board);
+  canvas.remove(board);
 
   board = new Board({
     width: window.innerWidth,
@@ -41,7 +40,7 @@ playAgainEl.addEventListener("click", () => {
     onWin: handleWin
   });
 
-  scene.add(board);
+  canvas.add(board);
 
   winEl.style.display = "none";
 });
@@ -89,16 +88,15 @@ window.addEventListener(
       height: window.innerHeight
     };
     board.setSize(newSize);
-    renderer.setSize(newSize);
-    renderer.render(scene);
+    canvas.setSize(newSize);
+    canvas.render();
   }, 300)
 );
 
 const animate = () => {
   requestAnimationFrame(animate);
-
   board.update();
-  renderer.render(scene);
+  canvas.render();
 };
 
 animate();
