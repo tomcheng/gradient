@@ -1,5 +1,4 @@
-import Rectangle from "../utils/rectangle";
-import Circle from "../utils/circle";
+import { Rectangle, Circle } from "@thomascheng/canvas-utils";
 
 const DECAY = 0.3;
 const OPACITY_DECAY = 0.1;

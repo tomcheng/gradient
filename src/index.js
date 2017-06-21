@@ -1,6 +1,5 @@
 import registerServiceWorker from "./registerServiceWorker";
-import Scene from "../utils/scene";
-import Renderer from "../utils/renderer";
+import { Scene, Renderer } from "@thomascheng/canvas-utils";
 import Board from "./board";
 import debounce from "lodash/debounce";
 
