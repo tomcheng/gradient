@@ -1,9 +1,21 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
 body, html {
   font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 300;
+  height: 100%;
 }
 
-#root, #touch, #win {
+#root {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#touch, #win {
   position: fixed;
   top: 0;
   right: 0;

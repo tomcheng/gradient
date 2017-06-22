@@ -16,11 +16,7 @@ const handleWin = () => {
   });
 };
 
-const canvas = new Canvas({
-  domNode: rootEl,
-  width: window.innerWidth,
-  height: window.innerHeight
-});
+const canvas = new Canvas(rootEl);
 let board = new Board({
   width: window.innerWidth,
   height: window.innerHeight,
@@ -88,7 +84,7 @@ window.addEventListener(
       height: window.innerHeight
     };
     board.setSize(newSize);
-    canvas.setSize(newSize);
+    canvas.resize();
     canvas.render();
   }, 300)
 );

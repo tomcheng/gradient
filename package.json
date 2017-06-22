@@ -12,7 +12,7 @@
     "deploy": "gh-pages -d build"
   },
   "dependencies": {
-    "@thomascheng/canvas-utils": "0.0.3",
+    "@thomascheng/canvas-utils": "0.0.5",
     "lodash": "4.17.4"
   },
   "devDependencies": {
