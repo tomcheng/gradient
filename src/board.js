@@ -24,11 +24,11 @@ class Board {
     this.lastPressedTile = null;
     this.pressedTileOffset = null;
     if (height > width) {
-      this.horizontalTiles = random(4, 8);
-      this.verticalTiles = random(6, 12);
+      this.horizontalTiles = random(4, 7);
+      this.verticalTiles = random(7, 10);
     } else {
-      this.horizontalTiles = random(6, 12);
-      this.verticalTiles = random(4, 8);
+      this.horizontalTiles = random(7, 10);
+      this.verticalTiles = random(4, 7);
     }
     this.tileWidth = Math.ceil(width / this.horizontalTiles);
     this.tileHeight = Math.ceil(height / this.verticalTiles);
