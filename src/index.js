@@ -2,6 +2,8 @@ import registerServiceWorker from "./registerServiceWorker";
 import { Canvas } from "@thomascheng/canvas-utils";
 import Board from "./board";
 import debounce from "lodash/debounce";
+import "./styles/reset.css";
+import "./styles/styles.css";
 
 const rootEl = document.getElementById("root");
 const touchEl = document.getElementById("touch");
