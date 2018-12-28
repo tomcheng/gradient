@@ -68,12 +68,33 @@ const getInitialTiles = ({ horizontalTiles, verticalTiles, mode }) => {
   return tiles;
 };
 
+const findTile = ({ x, y, tiles, tileDimensions }) => {
+  const i = Math.floor(x / tileDimensions.width);
+  const j = Math.floor(y / tileDimensions.height);
+
+  return tiles.find(tile => tile.i === i && tile.j === j);
+};
+
+const isCorrect = tile => tile.i === tile.iFinal && tile.j === tile.jFinal;
+
+const swapTiles = ({ tiles, id1, id2 }) => {
+  const tile1 = tiles.find(tile => tile.id === id1);
+  const tile2 = tiles.find(tile => tile.id === id2);
+  return tiles.map(tile =>
+    tile.id === id1
+      ? { ...tile1, i: tile2.i, j: tile2.j }
+      : tile.id === id2
+      ? { ...tile2, i: tile1.i, j: tile1.j }
+      : tile
+  );
+};
+
 const Game = ({ mode }) => {
   const containerRef = useRef(null);
   const [tileDimensions, setTileDimensions] = useState(null);
   const [tiles, setTiles] = useState(null);
   const [activeTile, setActiveTile] = useState(null);
-  const [startPosition, setStartPosition] = useState(null);
+  const [tileOffset, setTileOffset] = useState(null);
   const [currentPosition, setCurrentPosition] = useState(null);
 
   useLayoutEffect(() => {
@@ -97,8 +118,12 @@ const Game = ({ mode }) => {
   }, []);
 
   const handleMouseDown = ({ id, x, y }) => {
+    const tile = tiles.find(tile => tile.id === id);
     setActiveTile(id);
-    setStartPosition({ x, y });
+    setTileOffset({
+      x: x - tile.i * tileDimensions.width,
+      y: y - tile.j * tileDimensions.height
+    });
     setCurrentPosition({ x, y });
   };
 
@@ -108,11 +133,15 @@ const Game = ({ mode }) => {
     }
 
     setCurrentPosition({ x, y });
+    const overTile = findTile({ x, y, tiles, tileDimensions });
+    if (overTile && overTile.id !== activeTile && !isCorrect(overTile)) {
+      setTiles(swapTiles({ tiles, id1: activeTile, id2: overTile.id }));
+    }
   };
 
   const handleMouseUp = () => {
     setActiveTile(null);
-    setStartPosition(null);
+    setTileOffset(null);
     setCurrentPosition(null);
   };
 
@@ -136,18 +165,20 @@ const Game = ({ mode }) => {
       onMouseUp={handleMouseUp}
     >
       {tiles &&
-        tiles.map(({ id, i, j, color }) => {
+        tiles.map(tile => {
+          const { id, i, j, color } = tile;
           const active = activeTile === id;
-          const left =
-            i * tileDimensions.width +
-            (active ? currentPosition.x - startPosition.x : 0);
-          const top =
-            j * tileDimensions.height +
-            (active ? currentPosition.y - startPosition.y : 0);
+          const left = active
+            ? currentPosition.x - tileOffset.x
+            : i * tileDimensions.width;
+          const top = active
+            ? currentPosition.y - tileOffset.y
+            : j * tileDimensions.height;
           return (
             <Tile
               key={id}
               active={active}
+              correct={isCorrect(tile)}
               id={id}
               left={left}
               top={top}
