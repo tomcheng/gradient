@@ -33,7 +33,7 @@ const App = () => {
     <Container>
       <Header>header</Header>
       <GameContainer>
-        <Game />
+        <Game mode="ZEN" />
       </GameContainer>
       <Footer>footer</Footer>
     </Container>
