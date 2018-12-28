@@ -1,5 +1,15 @@
 import React from "react";
-import { animated, Spring } from "react-spring";
+import styled from "styled-components";
+import { animated, interpolate, Spring } from "react-spring";
+
+const Dot = styled.div`
+  border-radius: 3px;
+  width: 6px;
+  height: 6px;
+  background-color: #fff;
+  opacity: ${props => (props.correct ? 0.25 : 0)};
+  transition: opacity 0.15s ease-in-out 0.3s;
+`;
 
 const Tile = ({
   id,
@@ -14,22 +24,23 @@ const Tile = ({
   onMouseDown
 }) => (
   <Spring
-    to={{
-      left,
-      top
-    }}
+    to={{ xy: [left, top] }}
     config={{
-      tension: active ? 0 : 120,
-      friction: active ? 0 : 10,
-      clamp: true,
-      precision: 1
+      tension: active ? 0 : 2000,
+      friction: active ? 0 : 100,
+      clamp: true
     }}
     native
   >
-    {springStyles => (
+    {({ xy }) => (
       <animated.div
         style={{
-          ...springStyles,
+          transform: xy.interpolate(
+            (x, y) => `translate3d(${x}px, ${y}px, 0px)`
+          ),
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           position: "absolute",
           backgroundColor: color,
           width,
@@ -49,7 +60,7 @@ const Tile = ({
           onMouseDown({ id, x: evt.clientX, y: evt.clientY });
         }}
       >
-        {correct && !active && "yep"}
+        {correct && !active && <Dot correct={correct && !active} />}
       </animated.div>
     )}
   </Spring>

@@ -99,9 +99,9 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
   const [tileOffset, setTileOffset] = useState(null);
   const [currentPosition, setCurrentPosition] = useState(null);
   const tileWidth =
-    boardDimensions && Math.round(boardDimensions.width / horizontalTiles);
+    boardDimensions && Math.ceil(boardDimensions.width / horizontalTiles);
   const tileHeight =
-    boardDimensions && Math.round(boardDimensions.height / verticalTiles);
+    boardDimensions && Math.ceil(boardDimensions.height / verticalTiles);
 
   useLayoutEffect(() => {
     const calculateDimensions = () => {
