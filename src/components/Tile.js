@@ -1,6 +1,14 @@
 import React, { memo } from "react";
 import styled from "styled-components";
-import { animated, Spring } from "react-spring";
+import { Spring } from "react-spring";
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  user-select: none;
+`;
 
 const Dot = styled.div`
   border-radius: 3px;
@@ -24,28 +32,21 @@ const Tile = ({
   onMouseDown
 }) => (
   <Spring
-    to={{ xy: [left, top] }}
+    to={{ left, top }}
     config={{
       tension: 2000,
       friction: active ? 0 : 100,
       clamp: true
     }}
-    native
   >
-    {({ xy }) => (
-      <animated.div
+    {({ left, top }) => (
+      <Container
         style={{
-          transform: xy.interpolate(
-            (x, y) => `translate3d(${x}px, ${y}px, 0px)`
-          ),
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "absolute",
+          left: Math.round(left),
+          top: Math.round(top),
           backgroundColor: color,
           width,
           height,
-          userSelect: "none",
           zIndex: active ? 3 : lastTouched ? 2 : locked ? 0 : 1
         }}
         onTouchStart={evt => {
@@ -61,7 +62,7 @@ const Tile = ({
         }}
       >
         <Dot locked={locked && !active} />
-      </animated.div>
+      </Container>
     )}
   </Spring>
 );

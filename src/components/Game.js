@@ -101,8 +101,7 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
   const [lastTouchedTile, setLastTouchedTile] = useState(null);
   const [tileOffset, setTileOffset] = useState(null);
   const [currentPosition, setCurrentPosition] = useState(null);
-  const tileWidth =
-    boardDimensions && Math.ceil(boardDimensions.width / horizontalTiles);
+  const tileWidth = boardDimensions && Math.ceil(boardDimensions.width / horizontalTiles);
   const tileHeight =
     boardDimensions && Math.ceil(boardDimensions.height / verticalTiles);
 
