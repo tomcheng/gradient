@@ -90,6 +90,9 @@ const swapTiles = ({ tiles, id1, id2 }) => {
   );
 };
 
+const lockTiles = ({ tiles }) =>
+  tiles.map(tile => (isCorrect(tile) ? { ...tile, locked: true } : tile));
+
 const Game = ({ mode, horizontalTiles, verticalTiles }) => {
   const containerRef = useRef(null);
   const [boardDimensions, setBoardDimensions] = useState(null);
@@ -125,7 +128,7 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
   const handleMouseDown = ({ id, x, y }) => {
     const tile = tiles.find(tile => tile.id === id);
 
-    if (isCorrect(tile)) {
+    if (tile.locked) {
       return;
     }
 
@@ -167,6 +170,7 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
     setActiveTile(null);
     setTileOffset(null);
     setCurrentPosition(null);
+    setTiles(lockTiles({ tiles }));
   };
 
   return (
@@ -190,7 +194,7 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
     >
       {tiles &&
         tiles.map(tile => {
-          const { id, i, j, color } = tile;
+          const { id, i, j, color, locked } = tile;
           const active = activeTile === id;
           const left = active ? currentPosition.x : i * tileWidth;
           const top = active ? currentPosition.y : j * tileHeight;
@@ -199,7 +203,7 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
               key={id}
               lastTouched={lastTouchedTile === id}
               active={active}
-              correct={isCorrect(tile)}
+              locked={locked}
               id={id}
               left={left}
               top={top}

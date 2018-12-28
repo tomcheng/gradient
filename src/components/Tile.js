@@ -1,21 +1,21 @@
-import React from "react";
+import React, { memo } from "react";
 import styled from "styled-components";
-import { animated, interpolate, Spring } from "react-spring";
+import { animated, Spring } from "react-spring";
 
 const Dot = styled.div`
   border-radius: 3px;
   width: 6px;
   height: 6px;
   background-color: #fff;
-  opacity: ${props => (props.correct ? 0.25 : 0)};
-  transition: opacity 0.15s ease-in-out 0.3s;
+  opacity: ${props => (props.locked ? 0.25 : 0)};
+  transition: opacity 0.4s ease-in-out;
 `;
 
 const Tile = ({
   id,
   active,
   color,
-  correct,
+  locked,
   height,
   lastTouched,
   width,
@@ -46,7 +46,7 @@ const Tile = ({
           width,
           height,
           userSelect: "none",
-          zIndex: active ? 3 : lastTouched ? 2 : correct ? 0 : 1
+          zIndex: active ? 3 : lastTouched ? 2 : locked ? 0 : 1
         }}
         onTouchStart={evt => {
           evt.preventDefault();
@@ -60,10 +60,23 @@ const Tile = ({
           onMouseDown({ id, x: evt.clientX, y: evt.clientY });
         }}
       >
-        {correct && !active && <Dot correct={correct && !active} />}
+        <Dot locked={locked && !active} />
       </animated.div>
     )}
   </Spring>
 );
 
-export default Tile;
+const areEqual = (prevProps, nextProps) =>
+  [
+    "id",
+    "color",
+    "top",
+    "left",
+    "active",
+    "lastTouched",
+    "locked",
+    "width",
+    "height"
+  ].every(key => prevProps[key] === nextProps[key]);
+
+export default memo(Tile, areEqual);
