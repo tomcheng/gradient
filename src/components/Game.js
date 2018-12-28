@@ -139,7 +139,7 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
     setActiveTile(id);
     setTileOffset(tileOffset);
     setCurrentPosition({
-      x: clamp(x - tileOffset.x, 0, boardDimensions.width - tileWidth),
+      x: clamp(x - tileOffset.x, 0, (horizontalTiles - 1) * tileWidth),
       y: clamp(y - tileOffset.y, 0, (verticalTiles - 1) * tileHeight)
     });
   };
@@ -150,7 +150,7 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
     }
 
     setCurrentPosition({
-      x: clamp(x - tileOffset.x, 0, boardDimensions.width - tileWidth),
+      x: clamp(x - tileOffset.x, 0, (horizontalTiles - 1) * tileWidth),
       y: clamp(y - tileOffset.y, 0, (verticalTiles - 1) * tileHeight)
     });
     const overTile = findTile({
@@ -160,7 +160,7 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
       tileWidth,
       tileHeight
     });
-    if (overTile && overTile.id !== activeTile && !isCorrect(overTile)) {
+    if (overTile && overTile.id !== activeTile && !overTile.locked) {
       setTiles(swapTiles({ tiles, id1: activeTile, id2: overTile.id }));
     }
   };
@@ -198,6 +198,7 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
           const active = activeTile === id;
           const left = active ? currentPosition.x : i * tileWidth;
           const top = active ? currentPosition.y : j * tileHeight;
+
           return (
             <Tile
               key={id}

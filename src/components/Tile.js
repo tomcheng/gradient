@@ -26,7 +26,7 @@ const Tile = ({
   <Spring
     to={{ xy: [left, top] }}
     config={{
-      tension: active ? 0 : 2000,
+      tension: 2000,
       friction: active ? 0 : 100,
       clamp: true
     }}
