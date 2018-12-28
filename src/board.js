@@ -2,6 +2,7 @@ import Tile from "./tile";
 import Color, { interpolate } from "./color";
 import { niceColors } from "./colors";
 import find from "lodash/find";
+import findIndex from "lodash/findIndex";
 import shuffle from "lodash/shuffle";
 import random from "lodash/random";
 
@@ -15,7 +16,21 @@ const getRandomArray = length => {
   return shuffle(arr);
 };
 
-const getRandomColors = num => shuffle(niceColors).slice(0, num).map(hex => new Color(hex));
+const getRandomColors = num =>
+  shuffle(niceColors)
+    .slice(0, num)
+    .map(hex => new Color(hex));
+
+const mode = "ZEN";
+
+const swap = (arr, indexA, indexB) => {
+  const valA = arr[indexA];
+  const valB = arr[indexB];
+
+  return arr.map((val, index) =>
+    index === indexB ? valA : index === indexA ? valB : val
+  );
+};
 
 class Board {
   constructor({ width, height, onWin }) {
@@ -36,7 +51,23 @@ class Board {
 
     const [topLeft, topRight, bottomLeft, bottomRight] = getRandomColors(4);
 
-    const randoms = getRandomArray(this.horizontalTiles * this.verticalTiles);
+    let randoms = getRandomArray(this.horizontalTiles * this.verticalTiles);
+    const cornerIndices = [
+      0,
+      this.horizontalTiles - 1,
+      (this.verticalTiles - 1) * this.horizontalTiles,
+      this.verticalTiles * this.horizontalTiles - 1
+    ];
+
+    if (mode === "PUZZLE") {
+      cornerIndices.forEach(cornerIndex => {
+        const oldCornerPosition = findIndex(
+          randoms,
+          val => val === cornerIndex
+        );
+        randoms = swap(randoms, oldCornerPosition, cornerIndex);
+      });
+    }
 
     for (let i = 0; i < this.horizontalTiles; i++) {
       for (let j = 0; j < this.verticalTiles; j++) {
@@ -60,7 +91,9 @@ class Board {
               xTotal: this.horizontalTiles - 1,
               y: j,
               yTotal: this.verticalTiles - 1
-            })
+            }),
+            lockIfCorrect: mode !== "PUZZLE",
+            locked: mode === "PUZZLE" && cornerIndices.includes(index)
           })
         );
       }
@@ -77,7 +110,7 @@ class Board {
   handlePress = ({ x, y }) => {
     const tile = this._findTile({ x, y });
 
-    if (tile.correct) {
+    if (tile.locked) {
       return;
     }
 

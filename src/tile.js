@@ -4,7 +4,17 @@ const DECAY = 0.3;
 const OPACITY_DECAY = 0.1;
 
 class Tile {
-  constructor({ i, j, width, height, color, iFinal, jFinal }) {
+  constructor({
+    i,
+    j,
+    width,
+    height,
+    color,
+    iFinal,
+    jFinal,
+    lockIfCorrect,
+    locked
+  }) {
     this.i = i;
     this.j = j;
     this.iFinal = iFinal;
@@ -13,6 +23,8 @@ class Tile {
     this.height = height;
     this.position = null;
     this.correct = iFinal === i && jFinal === j;
+    this.lockIfCorrect = lockIfCorrect;
+    this.locked = this.lockIfCorrect ? this.correct : locked;
     this.win = false;
 
     this.rectangle = new Rectangle({
@@ -28,7 +40,7 @@ class Tile {
       y: j * height + 0.5 * height,
       radius: 3,
       fill: "rgba(255,255,255,0.25)",
-      opacity: this.correct ? 1 : 0
+      opacity: this.locked ? 1 : 0
     });
   }
 
@@ -53,7 +65,7 @@ class Tile {
   swap = otherTile => {
     const { i: iOther, j: jOther } = otherTile;
 
-    if (!otherTile.correct) {
+    if (!otherTile.locked) {
       otherTile.i = this.i;
       otherTile.j = this.j;
       this.i = iOther;
@@ -63,6 +75,7 @@ class Tile {
 
   checkIsCorrect = () => {
     this.correct = this.i === this.iFinal && this.j === this.jFinal;
+    this.locked = this.lockIfCorrect ? this.correct : this.locked;
   };
 
   setWin = () => {
@@ -93,7 +106,7 @@ class Tile {
         this.dot.y + DECAY * ((this.j + 0.5) * this.height - this.dot.y);
       this.dot.opacity =
         this.dot.opacity +
-        OPACITY_DECAY * ((this.correct && !this.win ? 1 : 0) - this.dot.opacity);
+        OPACITY_DECAY * ((this.locked && !this.win ? 1 : 0) - this.dot.opacity);
     }
   };
 
