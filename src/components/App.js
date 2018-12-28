@@ -7,9 +7,10 @@ const HEADER_HEIGHT = 40;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
-  background-color: #000;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: #111;
   color: #fff;
 `;
 

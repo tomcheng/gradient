@@ -1,4 +1,5 @@
 import React from "react";
+import { Spring } from "react-spring";
 
 const Tile = ({
   id,
@@ -11,27 +12,44 @@ const Tile = ({
   top,
   onMouseDown
 }) => (
-  <div
-    style={{
-      position: "absolute",
-      backgroundColor: color,
-      width,
-      height,
+  <Spring
+    to={{
       left,
-      top,
-      userSelect: "none",
-      zIndex: active ? 1 : 0
+      top
     }}
-    onTouchStart={evt => {
-      evt.preventDefault();
-      onMouseDown({ id, x: evt.touches[0].clientX, y: evt.touches[0].clientY });
-    }}
-    onMouseDown={evt => {
-      onMouseDown({ id, x: evt.clientX, y: evt.clientY });
+    config={{
+      tension: active ? 0 : 220,
+      friction: active ? 0 : 20,
+      clamp: true
     }}
   >
-    {correct && !active && "yep"}
-  </div>
+    {springStyles => (
+      <div
+        style={{
+          ...springStyles,
+          position: "absolute",
+          backgroundColor: color,
+          width,
+          height,
+          userSelect: "none",
+          zIndex: active ? 1 : 0
+        }}
+        onTouchStart={evt => {
+          evt.preventDefault();
+          onMouseDown({
+            id,
+            x: evt.touches[0].clientX,
+            y: evt.touches[0].clientY
+          });
+        }}
+        onMouseDown={evt => {
+          onMouseDown({ id, x: evt.clientX, y: evt.clientY });
+        }}
+      >
+        {correct && !active && "yep"}
+      </div>
+    )}
+  </Spring>
 );
 
 export default Tile;
