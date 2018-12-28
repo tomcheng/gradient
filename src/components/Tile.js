@@ -1,5 +1,5 @@
 import React from "react";
-import { Spring } from "react-spring";
+import { animated, Spring } from "react-spring";
 
 const Tile = ({
   id,
@@ -7,6 +7,7 @@ const Tile = ({
   color,
   correct,
   height,
+  lastTouched,
   width,
   left,
   top,
@@ -18,13 +19,15 @@ const Tile = ({
       top
     }}
     config={{
-      tension: active ? 0 : 220,
-      friction: active ? 0 : 20,
-      clamp: true
+      tension: active ? 0 : 120,
+      friction: active ? 0 : 10,
+      clamp: true,
+      precision: 1
     }}
+    native
   >
     {springStyles => (
-      <div
+      <animated.div
         style={{
           ...springStyles,
           position: "absolute",
@@ -32,7 +35,7 @@ const Tile = ({
           width,
           height,
           userSelect: "none",
-          zIndex: active ? 2 : correct ? 0 : 1
+          zIndex: active ? 3 : lastTouched ? 2 : correct ? 0 : 1
         }}
         onTouchStart={evt => {
           evt.preventDefault();
@@ -47,7 +50,7 @@ const Tile = ({
         }}
       >
         {correct && !active && "yep"}
-      </div>
+      </animated.div>
     )}
   </Spring>
 );

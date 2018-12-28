@@ -33,7 +33,7 @@ const Footer = styled.div`
 const App = () => {
   const [tileCounts] = useState({
     horizontal: random(4, 8),
-    vertical: random(6, 12)
+    vertical: random(6, 10)
   });
 
   return (

@@ -95,6 +95,7 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
   const [boardDimensions, setBoardDimensions] = useState(null);
   const [tiles, setTiles] = useState(null);
   const [activeTile, setActiveTile] = useState(null);
+  const [lastTouchedTile, setLastTouchedTile] = useState(null);
   const [tileOffset, setTileOffset] = useState(null);
   const [currentPosition, setCurrentPosition] = useState(null);
   const tileWidth =
@@ -123,6 +124,11 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
 
   const handleMouseDown = ({ id, x, y }) => {
     const tile = tiles.find(tile => tile.id === id);
+
+    if (isCorrect(tile)) {
+      return;
+    }
+
     const tileOffset = {
       x: x - tile.i * tileWidth,
       y: y - tile.j * tileHeight
@@ -157,6 +163,7 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
   };
 
   const handleMouseUp = () => {
+    setLastTouchedTile(activeTile);
     setActiveTile(null);
     setTileOffset(null);
     setCurrentPosition(null);
@@ -190,6 +197,7 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
           return (
             <Tile
               key={id}
+              lastTouched={lastTouchedTile === id}
               active={active}
               correct={isCorrect(tile)}
               id={id}
