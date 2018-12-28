@@ -32,7 +32,7 @@ const Tile = ({
           width,
           height,
           userSelect: "none",
-          zIndex: active ? 1 : 0
+          zIndex: active ? 2 : correct ? 0 : 1
         }}
         onTouchStart={evt => {
           evt.preventDefault();

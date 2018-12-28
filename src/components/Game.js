@@ -1,11 +1,10 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Tile from "./Tile";
-import { interpolate } from "../color";
-import random from "lodash/random";
+import Color, { interpolate } from "../color";
+import clamp from "lodash/clamp";
 import shuffle from "lodash/shuffle";
 import { niceColors } from "../colors";
-import Color from "../color";
 
 const Container = styled.div`
   position: absolute;
@@ -14,6 +13,7 @@ const Container = styled.div`
   bottom: 0;
   left: 0;
   touch-action: none;
+  overflow: hidden;
 `;
 
 const getRandomColors = num =>
@@ -69,9 +69,9 @@ const getInitialTiles = ({ horizontalTiles, verticalTiles, mode }) => {
   return tiles;
 };
 
-const findTile = ({ x, y, tiles, tileDimensions }) => {
-  const i = Math.floor(x / tileDimensions.width);
-  const j = Math.floor(y / tileDimensions.height);
+const findTile = ({ x, y, tiles, tileWidth, tileHeight }) => {
+  const i = Math.floor(x / tileWidth);
+  const j = Math.floor(y / tileHeight);
 
   return tiles.find(tile => tile.i === i && tile.j === j);
 };
@@ -90,23 +90,26 @@ const swapTiles = ({ tiles, id1, id2 }) => {
   );
 };
 
-const Game = ({ mode }) => {
+const Game = ({ mode, horizontalTiles, verticalTiles }) => {
   const containerRef = useRef(null);
-  const [tileDimensions, setTileDimensions] = useState(null);
+  const [boardDimensions, setBoardDimensions] = useState(null);
   const [tiles, setTiles] = useState(null);
   const [activeTile, setActiveTile] = useState(null);
   const [tileOffset, setTileOffset] = useState(null);
   const [currentPosition, setCurrentPosition] = useState(null);
+  const tileWidth =
+    boardDimensions && Math.round(boardDimensions.width / horizontalTiles);
+  const tileHeight =
+    boardDimensions && Math.round(boardDimensions.height / verticalTiles);
 
   useLayoutEffect(() => {
-    const horizontalTiles = random(4, 8);
-    const verticalTiles = random(6, 12);
     const calculateDimensions = () => {
-      const { width, height } = containerRef.current.getBoundingClientRect();
-      setTileDimensions({
-        width: Math.ceil(width / horizontalTiles),
-        height: Math.ceil(height / verticalTiles)
-      });
+      const {
+        width,
+        height,
+        top
+      } = containerRef.current.getBoundingClientRect();
+      setBoardDimensions({ width, height, top });
     };
 
     calculateDimensions();
@@ -120,12 +123,16 @@ const Game = ({ mode }) => {
 
   const handleMouseDown = ({ id, x, y }) => {
     const tile = tiles.find(tile => tile.id === id);
+    const tileOffset = {
+      x: x - tile.i * tileWidth,
+      y: y - tile.j * tileHeight
+    };
     setActiveTile(id);
-    setTileOffset({
-      x: x - tile.i * tileDimensions.width,
-      y: y - tile.j * tileDimensions.height
+    setTileOffset(tileOffset);
+    setCurrentPosition({
+      x: clamp(x - tileOffset.x, 0, boardDimensions.width - tileWidth),
+      y: clamp(y - tileOffset.y, 0, (verticalTiles - 1) * tileHeight)
     });
-    setCurrentPosition({ x, y });
   };
 
   const handleMouseMove = ({ id, x, y }) => {
@@ -133,8 +140,17 @@ const Game = ({ mode }) => {
       return;
     }
 
-    setCurrentPosition({ x, y });
-    const overTile = findTile({ x, y, tiles, tileDimensions });
+    setCurrentPosition({
+      x: clamp(x - tileOffset.x, 0, boardDimensions.width - tileWidth),
+      y: clamp(y - tileOffset.y, 0, (verticalTiles - 1) * tileHeight)
+    });
+    const overTile = findTile({
+      x,
+      y: y - boardDimensions.top,
+      tiles,
+      tileWidth,
+      tileHeight
+    });
     if (overTile && overTile.id !== activeTile && !isCorrect(overTile)) {
       setTiles(swapTiles({ tiles, id1: activeTile, id2: overTile.id }));
     }
@@ -169,12 +185,8 @@ const Game = ({ mode }) => {
         tiles.map(tile => {
           const { id, i, j, color } = tile;
           const active = activeTile === id;
-          const left = active
-            ? currentPosition.x - tileOffset.x
-            : i * tileDimensions.width;
-          const top = active
-            ? currentPosition.y - tileOffset.y
-            : j * tileDimensions.height;
+          const left = active ? currentPosition.x : i * tileWidth;
+          const top = active ? currentPosition.y : j * tileHeight;
           return (
             <Tile
               key={id}
@@ -184,8 +196,8 @@ const Game = ({ mode }) => {
               left={left}
               top={top}
               color={color}
-              width={tileDimensions.width}
-              height={tileDimensions.height}
+              width={tileWidth}
+              height={tileHeight}
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
             />

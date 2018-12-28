@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Game from "./Game";
+import random from "lodash/random";
 
 const HEADER_HEIGHT = 40;
 
@@ -30,11 +31,20 @@ const Footer = styled.div`
 `;
 
 const App = () => {
+  const [tileCounts] = useState({
+    horizontal: random(4, 8),
+    vertical: random(6, 12)
+  });
+
   return (
     <Container>
       <Header>header</Header>
       <GameContainer>
-        <Game mode="ZEN" />
+        <Game
+          mode="ZEN"
+          horizontalTiles={tileCounts.horizontal}
+          verticalTiles={tileCounts.vertical}
+        />
       </GameContainer>
       <Footer>footer</Footer>
     </Container>
