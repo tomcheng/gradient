@@ -36,11 +36,11 @@ const Tile = ({
   <Spring
     to={{ left, top }}
     config={{
-      tension: 2000,
-      friction: active ? 0 : 100,
+      tension: 1800,
+      friction: 100,
       clamp: true
     }}
-    immediate={isResizing}
+    immediate={isResizing || active}
   >
     {({ left, top }) => (
       <Container
