@@ -4,11 +4,10 @@ import Game from "./Game";
 import random from "lodash/random";
 
 const MINIMUM_HEADER_HEIGHT = 36;
-const MINIMUM_HORIZONTAL_PADDING = 3;
+const MINIMUM_HORIZONTAL_PADDING = 4;
 
 const Container = styled.div`
   height: 100%;
-  width: 100%;
   overflow: hidden;
   background-color: #111;
   color: #fff;
@@ -20,6 +19,7 @@ const App = () => {
   const containerRef = useRef(null);
   const [isResizing, setIsResizing] = useState(false);
   const [containerDimensions, setContainerDimensions] = useState(null);
+  const [hasWon, setHasWon] = useState(false);
   const [tileCounts] = useState({
     horizontal: random(4, 8),
     vertical: random(6, 10)
@@ -46,10 +46,8 @@ const App = () => {
   useLayoutEffect(() => {
     const handleResize = () => {
       setIsResizing(true);
-      setContainerDimensions({
-        height: containerRef.current.offsetHeight,
-        width: containerRef.current.offsetWidth
-      });
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      setContainerDimensions({ height, width });
     };
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -69,11 +67,15 @@ const App = () => {
               mode="ZEN"
               horizontalTiles={tileCounts.horizontal}
               verticalTiles={tileCounts.vertical}
+              hasWon={hasWon}
               height={gameHeight}
               width={gameWidth}
               isResizing={isResizing}
               onResetResizing={() => {
                 setIsResizing(false);
+              }}
+              onWin={() => {
+                setHasWon(true);
               }}
             />
           </div>

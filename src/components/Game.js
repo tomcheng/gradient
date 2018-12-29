@@ -9,7 +9,6 @@ import { niceColors } from "../colors";
 const Container = styled.div`
   position: relative;
   touch-action: none;
-  overflow: hidden;
 `;
 
 const getRandomColors = num =>
@@ -24,6 +23,8 @@ const getRandomArray = length => {
   }
   return shuffle(arr);
 };
+
+const isCorrect = tile => tile.i === tile.iFinal && tile.j === tile.jFinal;
 
 const getInitialTiles = ({ horizontalTiles, verticalTiles, mode }) => {
   const tiles = [];
@@ -40,8 +41,7 @@ const getInitialTiles = ({ horizontalTiles, verticalTiles, mode }) => {
     for (let j = 0; j < verticalTiles; j++) {
       const index = j * horizontalTiles + i;
       const randomIndex = randoms[index];
-
-      tiles.push({
+      const tile = {
         id: index + 1,
         iFinal: i,
         jFinal: j,
@@ -56,8 +56,13 @@ const getInitialTiles = ({ horizontalTiles, verticalTiles, mode }) => {
           xTotal: horizontalTiles - 1,
           y: j,
           yTotal: verticalTiles - 1
-        }),
-        locked: mode === "PUZZLE" && cornerIndices.includes(index)
+        })
+      };
+
+      tiles.push({
+        ...tile,
+        locked:
+          mode === "PUZZLE" ? cornerIndices.includes(index) : isCorrect(tile)
       });
     }
   }
@@ -71,8 +76,6 @@ const findTile = ({ x, y, tiles, tileWidth, tileHeight }) => {
 
   return tiles.find(tile => tile.i === i && tile.j === j);
 };
-
-const isCorrect = tile => tile.i === tile.iFinal && tile.j === tile.jFinal;
 
 const swapTiles = ({ tiles, id1, id2 }) => {
   const tile1 = tiles.find(tile => tile.id === id1);
@@ -89,13 +92,17 @@ const swapTiles = ({ tiles, id1, id2 }) => {
 const lockTiles = ({ tiles }) =>
   tiles.map(tile => (isCorrect(tile) ? { ...tile, locked: true } : tile));
 
+const checkWin = ({ tiles }) => tiles.every(isCorrect);
+
 const Game = ({
   height,
   mode,
+  hasWon,
   horizontalTiles,
   verticalTiles,
   isResizing,
-  onResetResizing
+  onResetResizing,
+  onWin
 }) => {
   const containerRef = useRef(null);
   const [boardDimensions, setBoardDimensions] = useState(null);
@@ -105,9 +112,9 @@ const Game = ({
   const [tileOffset, setTileOffset] = useState(null);
   const [currentPosition, setCurrentPosition] = useState(null);
   const tileWidth =
-    boardDimensions && Math.ceil(boardDimensions.width / horizontalTiles);
+    boardDimensions && Math.round(boardDimensions.width / horizontalTiles);
   const tileHeight =
-    boardDimensions && Math.ceil(boardDimensions.height / verticalTiles);
+    boardDimensions && Math.round(boardDimensions.height / verticalTiles);
 
   useLayoutEffect(() => {
     const calculateDimensions = () => {
@@ -179,6 +186,9 @@ const Game = ({
     setTileOffset(null);
     setCurrentPosition(null);
     setTiles(lockTiles({ tiles }));
+    if (checkWin({ tiles })) {
+      onWin();
+    }
   };
 
   return (
@@ -213,6 +223,7 @@ const Game = ({
               key={id}
               lastTouched={lastTouchedTileId === id}
               active={active}
+              hasWon={hasWon}
               locked={locked}
               id={id}
               isResizing={isResizing}

@@ -24,6 +24,7 @@ const Tile = ({
   isResizing,
   active,
   color,
+  hasWon,
   locked,
   height,
   lastTouched,
@@ -63,7 +64,7 @@ const Tile = ({
           onMouseDown({ id, x: evt.clientX, y: evt.clientY });
         }}
       >
-        <Dot locked={locked && !active} />
+        <Dot locked={locked && !active && !hasWon} />
       </Container>
     )}
   </Spring>
@@ -73,6 +74,7 @@ const areEqual = (prevProps, nextProps) =>
   [
     "id",
     "color",
+    "hasWon",
     "isResizing",
     "top",
     "left",
