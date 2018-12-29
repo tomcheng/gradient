@@ -21,6 +21,7 @@ const Dot = styled.div`
 
 const Tile = ({
   id,
+  isResizing,
   active,
   color,
   locked,
@@ -38,6 +39,7 @@ const Tile = ({
       friction: active ? 0 : 100,
       clamp: true
     }}
+    immediate={isResizing}
   >
     {({ left, top }) => (
       <Container
@@ -71,6 +73,7 @@ const areEqual = (prevProps, nextProps) =>
   [
     "id",
     "color",
+    "isResizing",
     "top",
     "left",
     "active",

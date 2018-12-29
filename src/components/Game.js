@@ -7,11 +7,7 @@ import shuffle from "lodash/shuffle";
 import { niceColors } from "../colors";
 
 const Container = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  position: relative;
   touch-action: none;
   overflow: hidden;
 `;
@@ -93,15 +89,23 @@ const swapTiles = ({ tiles, id1, id2 }) => {
 const lockTiles = ({ tiles }) =>
   tiles.map(tile => (isCorrect(tile) ? { ...tile, locked: true } : tile));
 
-const Game = ({ mode, horizontalTiles, verticalTiles }) => {
+const Game = ({
+  height,
+  mode,
+  horizontalTiles,
+  verticalTiles,
+  isResizing,
+  onResetResizing
+}) => {
   const containerRef = useRef(null);
   const [boardDimensions, setBoardDimensions] = useState(null);
   const [tiles, setTiles] = useState(null);
-  const [activeTile, setActiveTile] = useState(null);
-  const [lastTouchedTile, setLastTouchedTile] = useState(null);
+  const [activeTileId, setActiveTileId] = useState(null);
+  const [lastTouchedTileId, setLastTouchedTileId] = useState(null);
   const [tileOffset, setTileOffset] = useState(null);
   const [currentPosition, setCurrentPosition] = useState(null);
-  const tileWidth = boardDimensions && Math.ceil(boardDimensions.width / horizontalTiles);
+  const tileWidth =
+    boardDimensions && Math.ceil(boardDimensions.width / horizontalTiles);
   const tileHeight =
     boardDimensions && Math.ceil(boardDimensions.height / verticalTiles);
 
@@ -131,11 +135,15 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
       return;
     }
 
+    if (isResizing) {
+      onResetResizing();
+    }
+
     const tileOffset = {
       x: x - tile.i * tileWidth,
       y: y - tile.j * tileHeight
     };
-    setActiveTile(id);
+    setActiveTileId(id);
     setTileOffset(tileOffset);
     setCurrentPosition({
       x: clamp(x - tileOffset.x, 0, (horizontalTiles - 1) * tileWidth),
@@ -144,7 +152,7 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
   };
 
   const handleMouseMove = ({ id, x, y }) => {
-    if (!activeTile) {
+    if (!activeTileId) {
       return;
     }
 
@@ -159,14 +167,15 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
       tileWidth,
       tileHeight
     });
-    if (overTile && overTile.id !== activeTile && !overTile.locked) {
-      setTiles(swapTiles({ tiles, id1: activeTile, id2: overTile.id }));
+
+    if (overTile && overTile.id !== activeTileId && !overTile.locked) {
+      setTiles(swapTiles({ tiles, id1: activeTileId, id2: overTile.id }));
     }
   };
 
   const handleMouseUp = () => {
-    setLastTouchedTile(activeTile);
-    setActiveTile(null);
+    setLastTouchedTileId(activeTileId);
+    setActiveTileId(null);
     setTileOffset(null);
     setCurrentPosition(null);
     setTiles(lockTiles({ tiles }));
@@ -175,6 +184,7 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
   return (
     <Container
       ref={containerRef}
+      style={{ height }}
       onTouchMove={evt => {
         evt.preventDefault();
         handleMouseMove({
@@ -194,17 +204,18 @@ const Game = ({ mode, horizontalTiles, verticalTiles }) => {
       {tiles &&
         tiles.map(tile => {
           const { id, i, j, color, locked } = tile;
-          const active = activeTile === id;
+          const active = activeTileId === id;
           const left = active ? currentPosition.x : i * tileWidth;
           const top = active ? currentPosition.y : j * tileHeight;
 
           return (
             <Tile
               key={id}
-              lastTouched={lastTouchedTile === id}
+              lastTouched={lastTouchedTileId === id}
               active={active}
               locked={locked}
               id={id}
+              isResizing={isResizing}
               left={left}
               top={top}
               color={color}

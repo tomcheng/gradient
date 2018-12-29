@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React, { Fragment, useLayoutEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Game from "./Game";
 import random from "lodash/random";
 
-const HEADER_HEIGHT = 40;
+const MINIMUM_HEADER_HEIGHT = 36;
+const MINIMUM_HORIZONTAL_PADDING = 3;
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
   height: 100%;
   width: 100%;
   overflow: hidden;
@@ -15,38 +14,71 @@ const Container = styled.div`
   color: #fff;
 `;
 
-const Header = styled.div`
-  flex-shrink: 0;
-  height: ${HEADER_HEIGHT}px;
-`;
-
-const GameContainer = styled.div`
-  flex-grow: 1;
-  position: relative;
-`;
-
-const Footer = styled.div`
-  flex-shrink: 0;
-  height: ${HEADER_HEIGHT}px;
-`;
+const Header = styled.div``;
 
 const App = () => {
+  const containerRef = useRef(null);
+  const [isResizing, setIsResizing] = useState(false);
+  const [containerDimensions, setContainerDimensions] = useState(null);
   const [tileCounts] = useState({
     horizontal: random(4, 8),
     vertical: random(6, 10)
   });
+  const gameHeight =
+    containerDimensions &&
+    Math.floor(
+      (containerDimensions.height - 2 * MINIMUM_HEADER_HEIGHT) /
+        tileCounts.vertical
+    ) * tileCounts.vertical;
+  const gameWidth =
+    containerDimensions &&
+    Math.floor(
+      (containerDimensions.width - 2 * MINIMUM_HORIZONTAL_PADDING) /
+        tileCounts.horizontal
+    ) * tileCounts.horizontal;
+  const headerHeight =
+    containerDimensions &&
+    Math.round((containerDimensions.height - gameHeight) / 2);
+  const horizontalPadding =
+    containerDimensions &&
+    Math.round((containerDimensions.width - gameWidth) / 2);
+
+  useLayoutEffect(() => {
+    const handleResize = () => {
+      setIsResizing(true);
+      setContainerDimensions({
+        height: containerRef.current.offsetHeight,
+        width: containerRef.current.offsetWidth
+      });
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
-    <Container>
-      <Header>header</Header>
-      <GameContainer>
-        <Game
-          mode="ZEN"
-          horizontalTiles={tileCounts.horizontal}
-          verticalTiles={tileCounts.vertical}
-        />
-      </GameContainer>
-      <Footer>footer</Footer>
+    <Container ref={containerRef}>
+      {containerDimensions && (
+        <Fragment>
+          <Header style={{ height: headerHeight }}>header</Header>
+          <div style={{ padding: `0 ${horizontalPadding}px` }}>
+            <Game
+              mode="ZEN"
+              horizontalTiles={tileCounts.horizontal}
+              verticalTiles={tileCounts.vertical}
+              height={gameHeight}
+              width={gameWidth}
+              isResizing={isResizing}
+              onResetResizing={() => {
+                setIsResizing(false);
+              }}
+            />
+          </div>
+        </Fragment>
+      )}
     </Container>
   );
 };
