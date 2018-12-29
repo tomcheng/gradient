@@ -15,8 +15,41 @@ const Container = styled.div`
 
 const Header = styled.div``;
 
+const Overlay = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 10;
+`;
+
+const Title = styled.div`
+  font-size: 32px;
+  line-height: 40px;
+  margin-bottom: 15px;
+`;
+
+const Button = styled.div`
+  display: inline-block;
+  position: relative;
+  border: 0;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 10px 15px;
+  background-color: #fff;
+  color: #345069;
+  border-radius: 3px;
+  user-select: none;
+`;
+
 const App = () => {
   const containerRef = useRef(null);
+  const [gameId, setGameId] = useState(1);
   const [isResizing, setIsResizing] = useState(false);
   const [containerDimensions, setContainerDimensions] = useState(null);
   const [hasWon, setHasWon] = useState(false);
@@ -61,9 +94,15 @@ const App = () => {
     <Container ref={containerRef}>
       {containerDimensions && (
         <Fragment>
-          <Header style={{ height: headerHeight }}>header</Header>
-          <div style={{ padding: `0 ${horizontalPadding}px` }}>
+          <Header style={{ height: headerHeight }} />
+          <div
+            style={{
+              padding: `0 ${horizontalPadding}px`,
+              position: "relative"
+            }}
+          >
             <Game
+              key={gameId}
               mode="ZEN"
               horizontalTiles={tileCounts.horizontal}
               verticalTiles={tileCounts.vertical}
@@ -78,6 +117,19 @@ const App = () => {
                 setHasWon(true);
               }}
             />
+            {hasWon && (
+              <Overlay>
+                <Title>Nice Work</Title>
+                <Button
+                  onClick={() => {
+                    setHasWon(false);
+                    setGameId(gameId + 1);
+                  }}
+                >
+                  Play Again
+                </Button>
+              </Overlay>
+            )}
           </div>
         </Fragment>
       )}

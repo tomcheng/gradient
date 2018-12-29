@@ -16,7 +16,7 @@ const Dot = styled.div`
   height: 6px;
   background-color: #fff;
   opacity: ${props => (props.locked ? 0.25 : 0)};
-  transition: opacity 0.4s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
 `;
 
 const Tile = ({
