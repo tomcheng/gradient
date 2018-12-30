@@ -161,7 +161,10 @@ const Game = ({
   const [activeTileId, setActiveTileId] = useState(null);
   const [lastTouchedTileId, setLastTouchedTileId] = useState(null);
   const [tileOffset, setTileOffset] = useState(null);
-  const [currentPosition, setCurrentPosition] = useState(null);
+  const [startPosition, setStartPosition] = useState(null);
+  const [hasDragged, setHasDragged] = useState(false);
+  const [selectedTileId, setSelectedTileId] = useState(null);
+  const [dragPosition, setDragPosition] = useState(null);
   const tileWidth =
     boardDimensions && Math.round(boardDimensions.width / horizontalTiles);
   const tileHeight =
@@ -200,13 +203,16 @@ const Game = ({
       onResetResizing();
     }
 
+    setHasDragged(false);
+    setStartPosition({ x, y });
+
     const tileOffset = {
       x: x - tile.i * tileWidth,
       y: y - tile.j * tileHeight
     };
     setActiveTileId(id);
     setTileOffset(tileOffset);
-    setCurrentPosition({
+    setDragPosition({
       x: clamp(x - tileOffset.x, 0, (horizontalTiles - 1) * tileWidth),
       y: clamp(y - tileOffset.y, 0, (verticalTiles - 1) * tileHeight)
     });
@@ -217,7 +223,15 @@ const Game = ({
       return;
     }
 
-    setCurrentPosition({
+    if (
+      !hasDragged &&
+      (startPosition.x - x) ** 2 + (startPosition.y - y) ** 2 >= 4
+    ) {
+      setSelectedTileId(null);
+      setHasDragged(true);
+    }
+
+    setDragPosition({
       x: clamp(x - tileOffset.x, 0, (horizontalTiles - 1) * tileWidth),
       y: clamp(y - tileOffset.y, 0, (verticalTiles - 1) * tileHeight)
     });
@@ -236,15 +250,33 @@ const Game = ({
 
   const handleMouseUp = () => {
     setLastTouchedTileId(activeTileId);
+    let newTiles = tiles;
+
+    if (!hasDragged) {
+      if (selectedTileId) {
+        newTiles = swapTiles({
+          tiles: newTiles,
+          id1: selectedTileId,
+          id2: activeTileId
+        });
+        setSelectedTileId(null);
+      } else {
+        setSelectedTileId(activeTileId);
+      }
+    }
+
     setActiveTileId(null);
     setTileOffset(null);
-    setCurrentPosition(null);
+    setDragPosition(null);
+
     if (mode === "ZEN") {
-      setTiles(lockTiles({ tiles }));
+      newTiles = lockTiles({ tiles: newTiles });
     }
     if (checkWin({ tiles })) {
       onWin();
     }
+
+    setTiles(newTiles);
   };
 
   return (
@@ -271,8 +303,8 @@ const Game = ({
         tiles.map(tile => {
           const { id, i, j, color, locked } = tile;
           const active = activeTileId === id;
-          const left = active ? currentPosition.x : i * tileWidth;
-          const top = active ? currentPosition.y : j * tileHeight;
+          const left = active ? dragPosition.x : i * tileWidth;
+          const top = active ? dragPosition.y : j * tileHeight;
 
           return (
             <Tile
@@ -281,6 +313,7 @@ const Game = ({
               active={active}
               hasWon={hasWon}
               locked={locked}
+              selected={selectedTileId === id}
               showMistake={showMistakes && !isCorrect(tile)}
               id={id}
               isResizing={isResizing}

@@ -8,6 +8,7 @@ const Container = styled.div`
   justify-content: center;
   position: absolute;
   user-select: none;
+  transition: transform 0.15s ease-in-out;
 `;
 
 const Dot = styled.div`
@@ -15,7 +16,6 @@ const Dot = styled.div`
   width: 6px;
   height: 6px;
   background-color: #fff;
-  opacity: ${props => (props.locked ? 0.25 : 0)};
   transition: opacity 0.3s ease-in-out;
 `;
 
@@ -28,6 +28,7 @@ const Tile = ({
   locked,
   height,
   lastTouched,
+  selected,
   showMistake,
   width,
   left,
@@ -51,7 +52,8 @@ const Tile = ({
           backgroundColor: color,
           width,
           height,
-          zIndex: active ? 3 : lastTouched ? 2 : locked ? 0 : 1
+          zIndex: active ? 3 : lastTouched ? 2 : locked ? 0 : 1,
+          transform: selected ? "scale(0.85, 0.85)" : null
         }}
         onTouchStart={evt => {
           evt.preventDefault();
@@ -65,7 +67,7 @@ const Tile = ({
           onMouseDown({ id, x: evt.clientX, y: evt.clientY });
         }}
       >
-        <Dot locked={locked && !active && !hasWon} />
+        <Dot style={{ opacity: locked && !active && !hasWon ? 0.25 : 0 }} />
         {showMistake && <span>&times;</span>}
       </Container>
     )}
@@ -81,6 +83,7 @@ const areEqual = (prevProps, nextProps) =>
     "top",
     "left",
     "active",
+    "selected",
     "lastTouched",
     "locked",
     "showMistake",
