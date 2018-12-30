@@ -4,6 +4,7 @@ import Tile from "./Tile";
 import Color, { interpolate } from "../color";
 import clamp from "lodash/clamp";
 import shuffle from "lodash/shuffle";
+import take from "lodash/take";
 import { niceColors } from "../colors";
 
 const Container = styled.div`
@@ -26,16 +27,10 @@ const getRandomArray = length => {
 
 const isCorrect = tile => tile.i === tile.iFinal && tile.j === tile.jFinal;
 
-const getInitialTiles = ({ horizontalTiles, verticalTiles, mode }) => {
+const getInitialZenTiles = ({ horizontalTiles, verticalTiles }) => {
   const tiles = [];
   const [topLeft, topRight, bottomLeft, bottomRight] = getRandomColors(4);
   const randoms = getRandomArray(horizontalTiles * verticalTiles);
-  const cornerIndices = [
-    0,
-    horizontalTiles - 1,
-    (verticalTiles - 1) * horizontalTiles,
-    verticalTiles * horizontalTiles - 1
-  ];
 
   for (let i = 0; i < horizontalTiles; i++) {
     for (let j = 0; j < verticalTiles; j++) {
@@ -61,13 +56,68 @@ const getInitialTiles = ({ horizontalTiles, verticalTiles, mode }) => {
 
       tiles.push({
         ...tile,
-        locked:
-          mode === "PUZZLE" ? cornerIndices.includes(index) : isCorrect(tile)
+        locked: isCorrect(tile)
       });
     }
   }
 
   return tiles;
+};
+
+const getInitialPuzzleTiles = ({ horizontalTiles, verticalTiles }) => {
+  const tiles = [];
+  const [topLeft, topRight, bottomLeft, bottomRight] = getRandomColors(4);
+  const randoms = getRandomArray(horizontalTiles * verticalTiles);
+  const lockedPositions = take(randoms, 4).map(random => [
+    random % horizontalTiles,
+    Math.floor(random / horizontalTiles)
+  ]);
+
+  for (let i = 0; i < horizontalTiles; i++) {
+    for (let j = 0; j < verticalTiles; j++) {
+      const index = j * horizontalTiles + i;
+      const randomIndex = randoms[index];
+      const id = index + 1;
+      const tile = {
+        id,
+        iFinal: i,
+        jFinal: j,
+        i: randomIndex % horizontalTiles,
+        j: Math.floor(randomIndex / horizontalTiles),
+        color: interpolate({
+          topLeft,
+          topRight,
+          bottomLeft,
+          bottomRight,
+          x: i,
+          xTotal: horizontalTiles - 1,
+          y: j,
+          yTotal: verticalTiles - 1
+        })
+      };
+
+      tiles.push({
+        ...tile,
+        locked: lockedPositions.some(coord => coord[0] === i && coord[1] === j)
+      });
+    }
+  }
+
+  return lockedPositions.reduce((newTiles, coord) => {
+    const tileInPosition = newTiles.find(
+      tile => tile.i === coord[0] && tile.j === coord[1]
+    );
+    const correctTile = newTiles.find(
+      tile => tile.iFinal === coord[0] && tile.jFinal === coord[1]
+    );
+    return tileInPosition.id === correctTile.id
+      ? newTiles
+      : swapTiles({
+          tiles: newTiles,
+          id1: tileInPosition.id,
+          id2: correctTile.id
+        });
+  }, tiles);
 };
 
 const findTile = ({ x, y, tiles, tileWidth, tileHeight }) => {
@@ -117,6 +167,12 @@ const Game = ({
     boardDimensions && Math.round(boardDimensions.height / verticalTiles);
 
   useLayoutEffect(() => {
+    setTiles(
+      mode === "ZEN"
+        ? getInitialZenTiles({ horizontalTiles, verticalTiles })
+        : getInitialPuzzleTiles({ horizontalTiles, verticalTiles })
+    );
+
     const calculateDimensions = () => {
       const {
         width,
@@ -125,11 +181,8 @@ const Game = ({
       } = containerRef.current.getBoundingClientRect();
       setBoardDimensions({ width, height, top });
     };
-
     calculateDimensions();
-    setTiles(getInitialTiles({ horizontalTiles, verticalTiles, mode }));
     window.addEventListener("resize", calculateDimensions);
-
     return () => {
       window.removeEventListener("resize", calculateDimensions);
     };
@@ -185,7 +238,9 @@ const Game = ({
     setActiveTileId(null);
     setTileOffset(null);
     setCurrentPosition(null);
-    setTiles(lockTiles({ tiles }));
+    if (mode === "ZEN") {
+      setTiles(lockTiles({ tiles }));
+    }
     if (checkWin({ tiles })) {
       onWin();
     }
