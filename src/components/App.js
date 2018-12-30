@@ -40,7 +40,7 @@ const App = () => {
   const [containerDimensions, setContainerDimensions] = useState(null);
   const [hasWon, setHasWon] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [tileCounts] = useState({
+  const [tileCounts, setTileCounts] = useState({
     horizontal: random(4, 8),
     vertical: random(6, 10)
   });
@@ -77,6 +77,17 @@ const App = () => {
     };
   }, []);
 
+  const handleNewGame = ({ mode }) => {
+    setMode(mode);
+    setTileCounts({
+      horizontal: random(4, 8),
+      vertical: random(6, 10)
+    });
+    setHasWon(false);
+    setGameId(gameId + 1);
+    setShowModal(false);
+  };
+
   return (
     <Container ref={containerRef}>
       {containerDimensions && (
@@ -110,8 +121,7 @@ const App = () => {
             {hasWon && (
               <WinOverlay
                 onNewGame={() => {
-                  setHasWon(false);
-                  setGameId(gameId + 1);
+                  handleNewGame({ mode });
                 }}
               />
             )}
@@ -123,18 +133,7 @@ const App = () => {
         onClose={() => {
           setShowModal(false);
         }}
-        onNewZenGame={() => {
-          setMode("ZEN");
-          setHasWon(false);
-          setGameId(gameId + 1);
-          setShowModal(false);
-        }}
-        onNewPuzzleGame={() => {
-          setMode("PUZZLE");
-          setHasWon(false);
-          setGameId(gameId + 1);
-          setShowModal(false);
-        }}
+        onNewGame={handleNewGame}
       />
     </Container>
   );

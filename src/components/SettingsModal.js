@@ -29,7 +29,7 @@ const Modal = styled.div`
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.12);
 `;
 
-const SettingsModal = ({ show, onClose, onNewZenGame, onNewPuzzleGame }) => (
+const SettingsModal = ({ show, onClose, onNewGame }) => (
   <Transition
     items={show}
     from={{ opacity: 0 }}
@@ -48,12 +48,16 @@ const SettingsModal = ({ show, onClose, onNewZenGame, onNewPuzzleGame }) => (
           >
             <Title level={2}>Settings</Title>
             <div style={{ marginBottom: 10 }}>
-              <OutlineButton onClick={onNewZenGame}>
+              <OutlineButton onClick={() => {
+                onNewGame({ mode: "ZEN" })
+              }}>
                 Start Zen Game
               </OutlineButton>
             </div>
             <div>
-              <OutlineButton onClick={onNewPuzzleGame}>
+              <OutlineButton onClick={() => {
+                onNewGame({ mode: "PUZZLE" })
+              }}>
                 Start Puzzle Game
               </OutlineButton>
             </div>
