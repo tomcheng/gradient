@@ -28,6 +28,7 @@ const Tile = ({
   locked,
   height,
   lastTouched,
+  showMistake,
   width,
   left,
   top,
@@ -65,6 +66,7 @@ const Tile = ({
         }}
       >
         <Dot locked={locked && !active && !hasWon} />
+        {showMistake && <span>&times;</span>}
       </Container>
     )}
   </Spring>
@@ -81,6 +83,7 @@ const areEqual = (prevProps, nextProps) =>
     "active",
     "lastTouched",
     "locked",
+    "showMistake",
     "width",
     "height"
   ].every(key => prevProps[key] === nextProps[key]);

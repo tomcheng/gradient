@@ -149,6 +149,7 @@ const Game = ({
   mode,
   hasWon,
   horizontalTiles,
+  showMistakes,
   verticalTiles,
   isResizing,
   onResetResizing,
@@ -280,6 +281,7 @@ const Game = ({
               active={active}
               hasWon={hasWon}
               locked={locked}
+              showMistake={showMistakes && !isCorrect(tile)}
               id={id}
               isResizing={isResizing}
               left={left}

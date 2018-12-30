@@ -34,16 +34,18 @@ const GameContainer = styled.div`
 
 const App = () => {
   const containerRef = useRef(null);
-  const [gameId, setGameId] = useState(1);
-  const [mode, setMode] = useState("ZEN");
-  const [isResizing, setIsResizing] = useState(false);
   const [containerDimensions, setContainerDimensions] = useState(null);
-  const [hasWon, setHasWon] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [tileCounts, setTileCounts] = useState({
     horizontal: random(4, 8),
     vertical: random(6, 10)
   });
+  const [gameId, setGameId] = useState(1);
+  const [mode, setMode] = useState("ZEN");
+  const [hasWon, setHasWon] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showMistakes, setShowMistakes] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+
   const gameHeight =
     containerDimensions &&
     Math.floor(
@@ -105,12 +107,13 @@ const App = () => {
             <Game
               key={gameId}
               mode={mode}
+              isResizing={isResizing}
+              hasWon={hasWon}
+              showMistakes={showMistakes}
               horizontalTiles={tileCounts.horizontal}
               verticalTiles={tileCounts.vertical}
-              hasWon={hasWon}
               height={gameHeight}
               width={gameWidth}
-              isResizing={isResizing}
               onResetResizing={() => {
                 setIsResizing(false);
               }}
@@ -130,10 +133,18 @@ const App = () => {
       )}
       <SettingsModal
         show={showModal}
+        mode={mode}
         onClose={() => {
           setShowModal(false);
         }}
         onNewGame={handleNewGame}
+        onShowMistakes={() => {
+          setShowMistakes(true);
+          setShowModal(false);
+          setTimeout(() => {
+            setShowMistakes(false);
+          }, 5000);
+        }}
       />
     </Container>
   );
