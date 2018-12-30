@@ -1,6 +1,7 @@
 import React, { Fragment, useLayoutEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import random from "lodash/random";
+import Ellipsis from "./Ellipsis";
 import Game from "./Game";
 import WinOverlay from "./WinOverlay";
 import SettingsModal from "./SettingsModal";
@@ -25,16 +26,6 @@ const MenuTrigger = styled.div`
   display: flex;
   padding: 5px 20px;
   color: #888;
-`;
-
-const Dot = styled.div`
-  background-color: #666;
-  border-radius: 50%;
-  width: 4px;
-  height: 4px;
-  & + & {
-    margin-left: 6px;
-  }
 `;
 
 const GameContainer = styled.div`
@@ -96,9 +87,7 @@ const App = () => {
                 setShowModal(true);
               }}
             >
-              <Dot />
-              <Dot />
-              <Dot />
+              <Ellipsis />
             </MenuTrigger>
           </Header>
           <GameContainer style={{ padding: `0 ${horizontalPadding}px` }}>
