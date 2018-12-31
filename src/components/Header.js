@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, Fragment } from "react";
 import styled from "styled-components";
+import { Z_INDICES } from "../constants";
 
 const MODE_LABELS = {
   PUZZLE: "Puzzle Mode",
@@ -30,13 +31,81 @@ const Chevron = styled.span`
   }
 `;
 
-const Header = ({ height, mode, onNewGame }) => (
-  <Container style={{ height }}>
-    <div>
-      {MODE_LABELS[mode]} <Chevron />
-    </div>
-    <div onClick={onNewGame}>New Game</div>
-  </Container>
-);
+const DropdownOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: ${Z_INDICES.dropdown};
+`;
+
+const DropdownMenu = styled.div`
+  box-sizing: border-box;
+  width: 140px;
+  position: absolute;
+  background-color: #fff;
+  color: #333;
+  z-index: ${Z_INDICES.dropdown};
+  padding: 10px 0;
+  margin-top: 5px;
+`;
+
+const MenuItem = styled.div`
+  padding: 10px 20px;
+`;
+
+const Header = ({ height, mode, onNewGame }) => {
+  const [modeDropdownOpen, setModeDropdownOpen] = useState(false);
+  return (
+    <Container style={{ height }}>
+      <div>
+        <div
+          onClick={() => {
+            setModeDropdownOpen(!modeDropdownOpen);
+          }}
+        >
+          {MODE_LABELS[mode]} <Chevron />
+        </div>
+        {modeDropdownOpen && (
+          <Fragment>
+            <DropdownOverlay
+              onClick={() => {
+                setModeDropdownOpen(false);
+              }}
+            />
+            <DropdownMenu>
+              <MenuItem
+                onClick={() => {
+                  setModeDropdownOpen(false);
+                  if (mode === "ZEN") return;
+                  onNewGame({ mode: "ZEN" });
+                }}
+              >
+                Zen Mode
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  setModeDropdownOpen(false);
+                  if (mode === "PUZZLE") return;
+                  onNewGame({ mode: "PUZZLE" });
+                }}
+              >
+                Puzzle Mode
+              </MenuItem>
+            </DropdownMenu>
+          </Fragment>
+        )}
+      </div>
+      <div
+        onClick={() => {
+          onNewGame({ mode });
+        }}
+      >
+        New Game
+      </div>
+    </Container>
+  );
+};
 
 export default Header;

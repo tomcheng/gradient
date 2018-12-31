@@ -85,9 +85,7 @@ const App = () => {
           <Header
             height={headerHeight}
             mode={mode}
-            onNewGame={() => {
-              handleNewGame({ mode });
-            }}
+            onNewGame={handleNewGame}
           />
           <GameContainer style={{ padding: `0 ${horizontalPadding}px` }}>
             <Game
