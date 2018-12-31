@@ -52,7 +52,7 @@ const DropdownMenu = styled.div`
   margin-left: -10px;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(0,0,0,0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   background-clip: padding-box;
 `;
 
@@ -62,7 +62,12 @@ const MenuItem = styled.div`
   border-radius: 2px;
 `;
 
-const Header = ({ height, mode, onNewGame }) => {
+const RightSide = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Header = ({ height, mode, showMistakes, onNewGame, onToggleShowMistakes }) => {
   const [modeDropdownOpen, setModeDropdownOpen] = useState(false);
   return (
     <Container style={{ height }}>
@@ -106,13 +111,20 @@ const Header = ({ height, mode, onNewGame }) => {
           </Fragment>
         )}
       </div>
-      <div
-        onClick={() => {
-          onNewGame({ mode });
-        }}
-      >
-        New Game
-      </div>
+      <RightSide>
+        {mode === "PUZZLE" && (
+          <div onClick={onToggleShowMistakes} style={{ marginRight: 15 }}>
+            {showMistakes ? "Hide" : "Show"} Mistakes
+          </div>
+        )}
+        <div
+          onClick={() => {
+            onNewGame({ mode });
+          }}
+        >
+          New Game
+        </div>
+      </RightSide>
     </Container>
   );
 };

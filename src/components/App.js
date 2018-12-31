@@ -4,7 +4,6 @@ import random from "lodash/random";
 import Header from "./Header";
 import Game from "./Game";
 import WinOverlay from "./WinOverlay";
-import SettingsModal from "./SettingsModal";
 
 const MINIMUM_HEADER_HEIGHT = 36;
 const MINIMUM_HORIZONTAL_PADDING = 4;
@@ -30,7 +29,6 @@ const App = () => {
   const [gameId, setGameId] = useState(1);
   const [mode, setMode] = useState("ZEN");
   const [hasWon, setHasWon] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [showMistakes, setShowMistakes] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
 
@@ -75,7 +73,7 @@ const App = () => {
     });
     setHasWon(false);
     setGameId(gameId + 1);
-    setShowModal(false);
+    setShowMistakes(false);
   };
 
   return (
@@ -85,7 +83,11 @@ const App = () => {
           <Header
             height={headerHeight}
             mode={mode}
+            showMistakes={showMistakes}
             onNewGame={handleNewGame}
+            onToggleShowMistakes={() => {
+              setShowMistakes(!showMistakes);
+            }}
           />
           <GameContainer style={{ padding: `0 ${horizontalPadding}px` }}>
             <Game
@@ -115,21 +117,6 @@ const App = () => {
           </GameContainer>
         </Fragment>
       )}
-      <SettingsModal
-        show={showModal}
-        mode={mode}
-        onClose={() => {
-          setShowModal(false);
-        }}
-        onNewGame={handleNewGame}
-        onShowMistakes={() => {
-          setShowMistakes(true);
-          setShowModal(false);
-          setTimeout(() => {
-            setShowMistakes(false);
-          }, 5000);
-        }}
-      />
     </Container>
   );
 };
