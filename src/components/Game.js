@@ -272,7 +272,7 @@ const Game = ({
     if (mode === "ZEN") {
       newTiles = lockTiles({ tiles: newTiles });
     }
-    if (checkWin({ tiles })) {
+    if (checkWin({ tiles: newTiles })) {
       onWin();
     }
 
