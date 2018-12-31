@@ -1,7 +1,7 @@
 import React, { Fragment, useLayoutEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import random from "lodash/random";
-import Ellipsis from "./Ellipsis";
+import Header from "./Header";
 import Game from "./Game";
 import WinOverlay from "./WinOverlay";
 import SettingsModal from "./SettingsModal";
@@ -14,18 +14,6 @@ const Container = styled.div`
   overflow: hidden;
   background-color: #111;
   color: #fff;
-`;
-
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-`;
-
-const MenuTrigger = styled.div`
-  display: flex;
-  padding: 5px 20px;
-  color: #888;
 `;
 
 const GameContainer = styled.div`
@@ -94,15 +82,13 @@ const App = () => {
     <Container ref={containerRef}>
       {containerDimensions && (
         <Fragment>
-          <Header style={{ height: headerHeight }}>
-            <MenuTrigger
-              onClick={() => {
-                setShowModal(true);
-              }}
-            >
-              <Ellipsis />
-            </MenuTrigger>
-          </Header>
+          <Header
+            height={headerHeight}
+            mode={mode}
+            onNewGame={() => {
+              handleNewGame({ mode });
+            }}
+          />
           <GameContainer style={{ padding: `0 ${horizontalPadding}px` }}>
             <Game
               key={gameId}
