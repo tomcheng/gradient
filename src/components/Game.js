@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Tile from "./Tile";
-import Color, { interpolate } from "../color";
+import { interpolate } from "../color";
 import clamp from "lodash/clamp";
 import shuffle from "lodash/shuffle";
 import take from "lodash/take";
@@ -12,10 +12,7 @@ const Container = styled.div`
   touch-action: none;
 `;
 
-const getRandomColors = num =>
-  shuffle(niceColors)
-    .slice(0, num)
-    .map(hex => new Color(hex));
+const getRandomColors = num => shuffle(niceColors).slice(0, num);
 
 const getRandomArray = length => {
   const arr = [];
@@ -48,9 +45,9 @@ const getInitialZenTiles = ({ horizontalTiles, verticalTiles }) => {
           bottomLeft,
           bottomRight,
           x: i,
-          xTotal: horizontalTiles - 1,
+          xTotal: horizontalTiles,
           y: j,
-          yTotal: verticalTiles - 1
+          yTotal: verticalTiles
         })
       };
 
@@ -90,9 +87,9 @@ const getInitialPuzzleTiles = ({ horizontalTiles, verticalTiles }) => {
           bottomLeft,
           bottomRight,
           x: i,
-          xTotal: horizontalTiles - 1,
+          xTotal: horizontalTiles,
           y: j,
-          yTotal: verticalTiles - 1
+          yTotal: verticalTiles
         })
       };
 
