@@ -47,12 +47,19 @@ const DropdownMenu = styled.div`
   background-color: #fff;
   color: #333;
   z-index: ${Z_INDICES.dropdown};
-  padding: 10px 0;
-  margin-top: 5px;
+  padding: 4px;
+  margin-top: 10px;
+  margin-left: -10px;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0,0,0,0.1);
+  background-clip: padding-box;
 `;
 
 const MenuItem = styled.div`
   padding: 10px 20px;
+  background-color: ${props => (props.active ? "#d9f0fc" : "transparent")};
+  border-radius: 2px;
 `;
 
 const Header = ({ height, mode, onNewGame }) => {
@@ -76,6 +83,7 @@ const Header = ({ height, mode, onNewGame }) => {
             />
             <DropdownMenu>
               <MenuItem
+                active={mode === "ZEN"}
                 onClick={() => {
                   setModeDropdownOpen(false);
                   if (mode === "ZEN") return;
@@ -85,6 +93,7 @@ const Header = ({ height, mode, onNewGame }) => {
                 Zen Mode
               </MenuItem>
               <MenuItem
+                active={mode === "PUZZLE"}
                 onClick={() => {
                   setModeDropdownOpen(false);
                   if (mode === "PUZZLE") return;
