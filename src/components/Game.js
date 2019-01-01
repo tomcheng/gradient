@@ -250,7 +250,7 @@ const Game = ({
     let newTiles = tiles;
 
     if (!hasDragged) {
-      if (selectedTileId) {
+      if (selectedTileId && activeTileId) {
         newTiles = swapTiles({
           tiles: newTiles,
           id1: selectedTileId,
