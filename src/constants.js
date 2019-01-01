@@ -1,4 +1,4 @@
 export const Z_INDICES = {
-  dropdown: 9,
-  modal: 10
+  winOverlay: 90,
+  dropdown: 100
 };

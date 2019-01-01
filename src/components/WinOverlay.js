@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Title from "./Title";
 import Button from "./Button";
+import { Z_INDICES } from "../constants";
 
 const Overlay = styled.div`
   position: absolute;
@@ -13,7 +14,7 @@ const Overlay = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: center;
-  z-index: 10;
+  z-index: ${Z_INDICES.winOverlay};
 `;
 
 const WinOverlay = ({ onNewGame }) => (

@@ -5,7 +5,7 @@ import Header from "./Header";
 import Game from "./Game";
 import WinOverlay from "./WinOverlay";
 
-const MINIMUM_HEADER_HEIGHT = 36;
+const HEADER_HEIGHT = 36;
 const MINIMUM_HORIZONTAL_PADDING = 4;
 
 const Container = styled.div`
@@ -35,8 +35,7 @@ const App = () => {
   const gameHeight =
     containerDimensions &&
     Math.floor(
-      (containerDimensions.height - 2 * MINIMUM_HEADER_HEIGHT) /
-        tileCounts.vertical
+      (containerDimensions.height - 2 * HEADER_HEIGHT) / tileCounts.vertical
     ) * tileCounts.vertical;
   const gameWidth =
     containerDimensions &&
@@ -44,9 +43,6 @@ const App = () => {
       (containerDimensions.width - 2 * MINIMUM_HORIZONTAL_PADDING) /
         tileCounts.horizontal
     ) * tileCounts.horizontal;
-  const headerHeight =
-    containerDimensions &&
-    Math.round((containerDimensions.height - gameHeight) / 2);
   const horizontalPadding =
     containerDimensions &&
     Math.round((containerDimensions.width - gameWidth) / 2);
@@ -81,7 +77,7 @@ const App = () => {
       {containerDimensions && (
         <Fragment>
           <Header
-            height={headerHeight}
+            height={HEADER_HEIGHT}
             mode={mode}
             showMistakes={showMistakes}
             onNewGame={handleNewGame}
@@ -89,7 +85,7 @@ const App = () => {
               setShowMistakes(!showMistakes);
             }}
           />
-          <GameContainer style={{ padding: `0 ${horizontalPadding}px` }}>
+          <GameContainer style={{ padding: `2px ${horizontalPadding}px` }}>
             <Game
               key={gameId}
               mode={mode}
