@@ -8,7 +8,7 @@ import { COLORS } from "../constants";
 
 const HEADER_HEIGHT = 40;
 const MINIMUM_HORIZONTAL_PADDING = 4;
-const MINIMUM_BOTTOM_PADDING = 4;
+const MINIMUM_BOTTOM_PADDING = 16;
 
 const Container = styled.div`
   height: 100%;
@@ -20,6 +20,13 @@ const Container = styled.div`
 
 const GameContainer = styled.div`
   position: relative;
+`;
+
+const Version = styled.div`
+  font-size: 8px;
+  line-height: 12px;
+  text-align: center;
+  color: #888;
 `;
 
 const App = () => {
@@ -59,7 +66,6 @@ const App = () => {
     };
     handleResize();
     window.addEventListener("resize", handleResize);
-
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -116,6 +122,7 @@ const App = () => {
               />
             )}
           </GameContainer>
+          <Version>v 1.0.0</Version>
         </Fragment>
       )}
     </Container>
