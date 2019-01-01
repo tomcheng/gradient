@@ -29,15 +29,28 @@ const Version = styled.div`
   color: #888;
 `;
 
+const LOCAL_STORAGE_MODE_KEY = "__zen-hues-mode__";
+
+const useMode = () => {
+  const [mode, setMode] = useState(
+    localStorage.getItem(LOCAL_STORAGE_MODE_KEY) || "ZEN"
+  );
+  const setAndSaveMode = modeToSave => {
+    setMode(modeToSave);
+    localStorage.setItem(LOCAL_STORAGE_MODE_KEY, modeToSave);
+  };
+  return [mode, setAndSaveMode];
+};
+
 const App = () => {
   const containerRef = useRef(null);
   const [containerDimensions, setContainerDimensions] = useState(null);
   const [tileCounts, setTileCounts] = useState({
-    horizontal: random(4, 8),
-    vertical: random(6, 10)
+    horizontal: random(4, 7),
+    vertical: random(7, 10)
   });
   const [gameId, setGameId] = useState(1);
-  const [mode, setMode] = useState("ZEN");
+  const [mode, setMode] = useMode();
   const [hasWon, setHasWon] = useState(false);
   const [showMistakes, setShowMistakes] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
@@ -122,7 +135,7 @@ const App = () => {
               />
             )}
           </GameContainer>
-          <Version>v 1.0.0</Version>
+          <Version>v 1.1.0</Version>
         </Fragment>
       )}
     </Container>
