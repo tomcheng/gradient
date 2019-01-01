@@ -13,6 +13,7 @@ const Container = styled.div`
   justify-content: space-between;
   padding: 0 15px;
   color: #ccc;
+  user-select: none;
 `;
 
 const Chevron = styled.span`
@@ -121,8 +122,20 @@ const Header = ({
       </div>
       <RightSide>
         {mode === "PUZZLE" && !hasWon && (
-          <div onClick={onToggleShowMistakes} style={{ marginRight: 15 }}>
-            {showMistakes ? "Hide" : "Show"} Mistakes
+          <div
+            onTouchStart={() => {
+              if (!showMistakes) {
+                onToggleShowMistakes();
+              }
+            }}
+            onTouchEnd={() => {
+              if (showMistakes) {
+                onToggleShowMistakes();
+              }
+            }}
+            style={{ marginRight: 15 }}
+          >
+            Show Mistakes
           </div>
         )}
         <div

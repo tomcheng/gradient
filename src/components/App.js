@@ -5,8 +5,9 @@ import Header from "./Header";
 import Game from "./Game";
 import WinOverlay from "./WinOverlay";
 
-const HEADER_HEIGHT = 36;
+const HEADER_HEIGHT = 40;
 const MINIMUM_HORIZONTAL_PADDING = 4;
+const MINIMUM_BOTTOM_PADDING = 4;
 
 const Container = styled.div`
   height: 100%;
@@ -35,7 +36,8 @@ const App = () => {
   const gameHeight =
     containerDimensions &&
     Math.floor(
-      (containerDimensions.height - 2 * HEADER_HEIGHT) / tileCounts.vertical
+      (containerDimensions.height - HEADER_HEIGHT - MINIMUM_BOTTOM_PADDING) /
+        tileCounts.vertical
     ) * tileCounts.vertical;
   const gameWidth =
     containerDimensions &&
