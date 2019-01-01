@@ -1,17 +1,32 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import Tile from "./Tile";
-import { interpolate } from "../color";
+import chroma from "chroma-js";
 import clamp from "lodash/clamp";
+import sample from "lodash/sample";
 import shuffle from "lodash/shuffle";
 import take from "lodash/take";
+import { interpolate } from "../color";
+import Tile from "./Tile";
 import { niceColors } from "../colors";
+
+const SIMILARITY_THRESHOLD = 10;
 
 const Container = styled.div`
   position: relative;
 `;
 
-const getRandomColors = num => shuffle(niceColors).slice(0, num);
+const getRandomColors = num => {
+  const selected = [];
+
+  while (selected.length < num) {
+    const color = sample(niceColors);
+    if (selected.every(c => chroma.deltaE(c, color) > SIMILARITY_THRESHOLD)) {
+      selected.push(color);
+    }
+  }
+
+  return selected;
+};
 
 const getRandomArray = length => {
   const arr = [];

@@ -135,7 +135,7 @@ const App = () => {
               />
             )}
           </GameContainer>
-          <Version>v 1.1.0</Version>
+          <Version>v 1.2.0</Version>
         </Fragment>
       )}
     </Container>
