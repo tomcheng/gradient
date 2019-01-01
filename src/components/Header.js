@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from "react";
 import styled from "styled-components";
-import { Z_INDICES } from "../constants";
+import { Z_INDICES, COLORS } from "../constants";
 
 const MODE_LABELS = {
   PUZZLE: "Puzzle Mode",
@@ -12,15 +12,27 @@ const Container = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 15px;
-  color: #ccc;
+  color: ${COLORS.appText};
   user-select: none;
+`;
+
+const Button = styled.div`
+  color: ${props => (props.active ? COLORS.appTextActive : "inherit")};
+
+  &:active {
+    color: ${COLORS.appTextActive};
+  }
+
+  & + & {
+    margin-left: 15px;
+  }
 `;
 
 const Chevron = styled.span`
   &:before {
     border-style: solid;
     border-width: 1px 1px 0 0;
-    border-color: #888;
+    border-color: ${props => (props.active ? "#aaa" : "#888")};
     content: "";
     display: inline-block;
     height: 6px;
@@ -58,8 +70,13 @@ const DropdownMenu = styled.div`
 `;
 
 const MenuItem = styled.div`
-  padding: 10px 20px;
-  background-color: ${props => (props.active ? "#d9f0fc" : "transparent")};
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  background-color: ${props =>
+    props.active ? COLORS.dropdownActiveBackground : "transparent"};
+  color: ${props => (props.active ? COLORS.dropdownActiveText : "inherit")};
   border-radius: 2px;
 `;
 
@@ -81,13 +98,14 @@ const Header = ({
   return (
     <Container style={{ height }}>
       <div>
-        <div
+        <Button
+          active={modeDropdownOpen}
           onClick={() => {
             setModeDropdownOpen(!modeDropdownOpen);
           }}
         >
-          {MODE_LABELS[mode]} <Chevron />
-        </div>
+          {MODE_LABELS[mode]} <Chevron active={modeDropdownOpen} />
+        </Button>
         {modeDropdownOpen && (
           <Fragment>
             <DropdownOverlay
@@ -122,7 +140,7 @@ const Header = ({
       </div>
       <RightSide>
         {mode === "PUZZLE" && !hasWon && (
-          <div
+          <Button
             onTouchStart={() => {
               if (!showMistakes) {
                 onToggleShowMistakes();
@@ -133,18 +151,17 @@ const Header = ({
                 onToggleShowMistakes();
               }
             }}
-            style={{ marginRight: 15 }}
           >
             Show Mistakes
-          </div>
+          </Button>
         )}
-        <div
+        <Button
           onClick={() => {
             onNewGame({ mode });
           }}
         >
           New Game
-        </div>
+        </Button>
       </RightSide>
     </Container>
   );

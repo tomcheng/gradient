@@ -4,6 +4,7 @@ import random from "lodash/random";
 import Header from "./Header";
 import Game from "./Game";
 import WinOverlay from "./WinOverlay";
+import { COLORS } from "../constants";
 
 const HEADER_HEIGHT = 40;
 const MINIMUM_HORIZONTAL_PADDING = 4;
@@ -12,7 +13,7 @@ const MINIMUM_BOTTOM_PADDING = 4;
 const Container = styled.div`
   height: 100%;
   overflow: hidden;
-  background-color: #111;
+  background-color: ${COLORS.appBackground};
   color: #fff;
   touch-action: none;
 `;
