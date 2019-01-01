@@ -77,6 +77,7 @@ const App = () => {
       {containerDimensions && (
         <Fragment>
           <Header
+            hasWon={hasWon}
             height={HEADER_HEIGHT}
             mode={mode}
             showMistakes={showMistakes}

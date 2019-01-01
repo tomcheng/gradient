@@ -67,8 +67,16 @@ const RightSide = styled.div`
   align-items: center;
 `;
 
-const Header = ({ height, mode, showMistakes, onNewGame, onToggleShowMistakes }) => {
+const Header = ({
+  hasWon,
+  height,
+  mode,
+  showMistakes,
+  onNewGame,
+  onToggleShowMistakes
+}) => {
   const [modeDropdownOpen, setModeDropdownOpen] = useState(false);
+
   return (
     <Container style={{ height }}>
       <div>
@@ -112,7 +120,7 @@ const Header = ({ height, mode, showMistakes, onNewGame, onToggleShowMistakes })
         )}
       </div>
       <RightSide>
-        {mode === "PUZZLE" && (
+        {mode === "PUZZLE" && !hasWon && (
           <div onClick={onToggleShowMistakes} style={{ marginRight: 15 }}>
             {showMistakes ? "Hide" : "Show"} Mistakes
           </div>
