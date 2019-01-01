@@ -9,7 +9,6 @@ import { niceColors } from "../colors";
 
 const Container = styled.div`
   position: relative;
-  touch-action: none;
 `;
 
 const getRandomColors = num => shuffle(niceColors).slice(0, num);

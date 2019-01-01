@@ -14,6 +14,7 @@ const Container = styled.div`
   overflow: hidden;
   background-color: #111;
   color: #fff;
+  touch-action: none;
 `;
 
 const GameContainer = styled.div`
