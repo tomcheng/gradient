@@ -96,7 +96,12 @@ const App = () => {
   };
 
   return (
-    <Container ref={containerRef}>
+    <Container
+      ref={containerRef}
+      onTouchStart={evt => {
+        evt.preventDefault();
+      }}
+    >
       {containerDimensions && (
         <Fragment>
           <Header
@@ -135,7 +140,7 @@ const App = () => {
               />
             )}
           </GameContainer>
-          <Version>v 1.2.0</Version>
+          <Version>v 1.2.1</Version>
         </Fragment>
       )}
     </Container>
