@@ -3,10 +3,19 @@
   margin: 0;
 }
 
-body, html {
+body,
+html {
   font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 300;
   height: 100%;
+}
+
+html {
+  overflow: hidden;
+}
+
+body {
+  overflow: auto;
 }
 
 #root {
@@ -15,7 +24,8 @@ body, html {
   display: block;
 }
 
-#touch, #win {
+#touch,
+#win {
   position: fixed;
   top: 0;
   right: 0;
