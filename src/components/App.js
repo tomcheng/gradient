@@ -140,7 +140,7 @@ const App = () => {
               />
             )}
           </GameContainer>
-          <Version>v 1.2.3</Version>
+          <Version>v 1.2.4</Version>
         </Fragment>
       )}
     </Container>

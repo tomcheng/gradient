@@ -16,7 +16,7 @@ if (!Object.entries) {
   };
 }
 
-window.addEventListener("touchstart", evt => {
+window.addEventListener("touchmove", evt => {
   evt.preventDefault();
 }, { passive: false });
 
