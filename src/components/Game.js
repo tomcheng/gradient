@@ -295,7 +295,6 @@ const Game = ({
       ref={containerRef}
       style={{ height }}
       onTouchMove={evt => {
-        evt.preventDefault();
         handleMouseMove({
           x: evt.touches[0].clientX,
           y: evt.touches[0].clientY
@@ -305,7 +304,6 @@ const Game = ({
         handleMouseMove({ x: evt.clientX, y: evt.clientY });
       }}
       onTouchEnd={evt => {
-        evt.preventDefault();
         handleMouseUp();
       }}
       onMouseUp={handleMouseUp}
