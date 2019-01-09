@@ -304,6 +304,7 @@ const Game = ({
         handleMouseMove({ x: evt.clientX, y: evt.clientY });
       }}
       onTouchEnd={evt => {
+        evt.preventDefault();
         handleMouseUp();
       }}
       onMouseUp={handleMouseUp}
